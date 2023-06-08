@@ -13,7 +13,7 @@ export const Layout = (props) => {
       </Head>
       <header>
         <img src="/img/logo-horiz-white-2018.svg" alt="DoctorLogic" />
-        <nav>
+        {/* <nav>
           <Link href="/">
             <a>Home</a>
           </Link>
@@ -21,7 +21,7 @@ export const Layout = (props) => {
           <Link href="/posts">
             <a>Posts</a>
           </Link>
-        </nav>
+        </nav> */}
       </header>
       <main className={styles.main}>{props.children}</main>
     </div>
