@@ -1,109 +1,139 @@
 @import "/public/styles/global.scss";
 
+// todo: this is just POC, you'll probably want to replace it!
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+
+  input {
+    display: none;
+  }
+
+  label {
+    padding: 0.5ch 1em;
+  }
+
+  input:checked + label {
+    outline: 1px solid red;
+  }
+}
+
+.group {
+  display: none;
+  flex: 1 1 100%;
+  order: 1;
+
+  input:checked + label + & {
+    display: block;
+  }
+}
+
+// end todo area...
+
 .features {
-    @include grid;
-    max-width: 1200px;
-    margin: 60px auto;
-    grid-row-gap: 40px;
-    grid-column-gap: 10px;
-    padding: 60px 40px;
+  @include grid;
+  max-width: 1200px;
+  margin: 60px auto;
+  grid-row-gap: 40px;
+  grid-column-gap: 10px;
+  padding: 60px 40px;
 
-    @include phone-wide-min {
-      gap: 20px;
-    }
-    
+  @include phone-wide-min {
+    gap: 20px;
+  }
 
-    @include tablet-wide-min {
-      gap: 2vw;
-    }
-    
+
+  @include tablet-wide-min {
+    gap: 2vw;
+  }
+
 }
 
 .feature {
-    grid-column: auto / span 24;
-    padding: 32px;
-    background: $color-5;
-    border-radius: 32px;
+  grid-column: auto / span 24;
+  padding: 32px;
+  background: $color-5;
+  border-radius: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 300px;
+
+  @include tablet-min {
+    grid-column: auto / span 8;
+  }
+
+  img {
+    width: 10vw;
+    display: block;
+    order: -1;
+    min-width: 48px;
+
+    @include phone-wide-min {
+      width: 5vw;
+    }
+
+
+    @include tablet-wide-min {
+      width: 3vw;
+    }
+
+  }
+
+  .headline {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    min-height: 300px;
+    align-items: flex-end;
+    font-size: clamp(1.5rem, 3vw, 3rem);
+    margin: 0;
+  }
 
-    @include tablet-min {
-      grid-column: auto / span 8;
-    }
+  .image {
+    margin-bottom: 20px;
+  }
 
-    img {
-        width: 10vw;
-        display: block;
-        order: -1;
-        min-width: 48px;
+  .button {
+    color: $color-3;
+    text-decoration: underline;
+    margin-top: auto;
+  }
 
-        @include phone-wide-min {
-          width: 5vw;
-        }
-        
-
-        @include tablet-wide-min {
-            width: 3vw;
-        }
-        
-    }
-
-    .headline {
-        display: flex;
-        align-items: flex-end;
-        font-size: clamp(1.5rem, 3vw, 3rem);
-        margin: 0;
-    }
-
-    .image {
-        margin-bottom: 20px;
-    }
-
-    .button {
-        color: $color-3;
-        text-decoration: underline;
-        margin-top: auto;
-    }
-    
 }
 
 .features--50 .feature {
-    grid-column: auto / span 24;
+  grid-column: auto / span 24;
 
-    @include tablet-min {
-      grid-column: auto / span 12;
-    }
+  @include tablet-min {
+    grid-column: auto / span 12;
+  }
 
-    img {
-        max-width: 100%;
-        display: block;
-    }
+  img {
+    max-width: 100%;
+    display: block;
+  }
 }
 
 .features--25 .feature {
-    grid-column: auto / span 24;
+  grid-column: auto / span 24;
 
-    @include tablet-min {
-      grid-column: auto / span 6;
-    }
+  @include tablet-min {
+    grid-column: auto / span 6;
+  }
 
-    img {
-        max-width: 100%;
-        display: block;
-    }
+  img {
+    max-width: 100%;
+    display: block;
+  }
 }
 
 .features--100 .feature {
-    grid-column: auto / span 24;
+  grid-column: auto / span 24;
 
-    img {
-        max-width: 100%;
-        display: block;
-    }
+  img {
+    max-width: 100%;
+    display: block;
+  }
 }
 
 .image {
-    padding: 10px;
+  padding: 10px;
 }
