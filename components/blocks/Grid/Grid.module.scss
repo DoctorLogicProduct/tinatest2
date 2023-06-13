@@ -30,110 +30,12 @@
 
 // end todo area...
 
-.features {
-  @include grid;
-  max-width: 1200px;
-  margin: 60px auto;
-  grid-row-gap: 40px;
-  grid-column-gap: 10px;
-  padding: 60px 40px;
-
-  @include phone-wide-min {
-    gap: 20px;
-  }
-
-
-  @include tablet-wide-min {
-    gap: 2vw;
-  }
-
+.modal {
+  opacity: 1;
+  transition: opacity .5s ease;
 }
 
-.feature {
-  grid-column: auto / span 24;
-  padding: 32px;
-  background: $color-5;
-  border-radius: 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  min-height: 300px;
-
-  @include tablet-min {
-    grid-column: auto / span 8;
-  }
-
-  img {
-    width: 10vw;
-    display: block;
-    order: -1;
-    min-width: 48px;
-
-    @include phone-wide-min {
-      width: 5vw;
-    }
-
-
-    @include tablet-wide-min {
-      width: 3vw;
-    }
-
-  }
-
-  .headline {
-    display: flex;
-    align-items: flex-end;
-    font-size: clamp(1.5rem, 3vw, 3rem);
-    margin: 0;
-  }
-
-  .image {
-    margin-bottom: 20px;
-  }
-
-  .button {
-    color: $color-3;
-    text-decoration: underline;
-    margin-top: auto;
-  }
-
-}
-
-.features--50 .feature {
-  grid-column: auto / span 24;
-
-  @include tablet-min {
-    grid-column: auto / span 12;
-  }
-
-  img {
-    max-width: 100%;
-    display: block;
-  }
-}
-
-.features--25 .feature {
-  grid-column: auto / span 24;
-
-  @include tablet-min {
-    grid-column: auto / span 6;
-  }
-
-  img {
-    max-width: 100%;
-    display: block;
-  }
-}
-
-.features--100 .feature {
-  grid-column: auto / span 24;
-
-  img {
-    max-width: 100%;
-    display: block;
-  }
-}
-
-.image {
-  padding: 10px;
+.modal_close {
+  opacity: 0;
+  transition: opacity .5s ease; 
 }
