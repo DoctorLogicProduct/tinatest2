@@ -1,0 +1,39 @@
+@import "/public/styles/global.scss";
+
+.spacingswitch {
+    padding: var(--padding);
+
+    img {
+        max-width: 100%;
+        display: block;
+    }
+
+    &__item {
+      @include grid;
+      gap: calc(var(--padding) / 2);
+    }
+
+    &__item_image {
+        grid-column: auto / span 24;
+        order: -1;
+
+        @include tablet-min {
+          grid-column: auto / span 14;
+        }
+        
+    }
+
+    &__item_text {
+        grid-column: auto / span 24;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 0 40px;
+
+        @include tablet-min {
+          grid-column: auto / span 10;
+        }
+        
+    }
+}

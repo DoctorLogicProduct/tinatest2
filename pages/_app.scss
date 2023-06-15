@@ -9,9 +9,10 @@
 
 body {
     // background: linear-gradient(to bottom, #0e0725 0%,#3e4c5e 50%,#0e0725 100%);
-    background: $color-1;
+    // background: $color-1;
     font-family: 'Poppins', sans-serif;
     line-height: 1.8;
+    background: conic-gradient(from 90deg at bottom right, $color-1, $color-4);
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -43,7 +44,7 @@ header {
     padding: 20px 40px;
     position: sticky;
     top: 0;
-    background: $color-1;
+    // background: $color-1;
 
     img {
         max-width: 220px;

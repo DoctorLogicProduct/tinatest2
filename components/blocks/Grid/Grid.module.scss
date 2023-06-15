@@ -114,6 +114,29 @@
     opacity: 0;
   }
 
+  &_features {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 24px;
+
+    @include tablet-min {
+      gap: 24px;
+    }
+    
+
+    span {
+      color: $color-2;
+      padding: 8px 24px;
+      background: $color-4;
+      border-radius: 60px;
+      min-width: 150px;
+      text-align: center;
+      border: solid 1px #aab2b8;
+    }
+  }
+
   button {
     position: fixed;
     top: 20px;
@@ -126,7 +149,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: unset;
+    border: solid 1px $color-2;
     cursor: pointer;
+    background: transparent;
+    color: $color-2;
   }
 }

@@ -4,6 +4,7 @@ import { Hero } from "./blocks/Hero/Hero";
 import { ImageText50 } from "./blocks/ImageText50/ImageText50";
 import { Features } from "./blocks/Features/Features";
 import { Grid } from "./blocks/Grid/Grid";
+import { SpacingSwitch } from "./blocks/SpacingSwitch/SpacingSwitch";
 
 export const Blocks = (props: Home) => {
   return (
@@ -47,6 +48,15 @@ export const Blocks = (props: Home) => {
                   <Grid data={block} parentField={`blocks.${i}`} />
                 </div>
               );
+              case "HomeBlocksSpacingSwitch":
+                return (
+                  <div
+                    data-tinafield={`blocks.${i}`}
+                    key={i + block.__typename}
+                  >
+                    <SpacingSwitch data={block} parentField={`blocks.${i}`} />
+                  </div>
+                );
             default:
               return null;
           }

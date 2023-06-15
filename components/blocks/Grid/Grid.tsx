@@ -51,7 +51,7 @@ const GridItem = ({ data, tinaField, setSelectedItem }: GridItemParams) => {
 const GridGroupFeatures: FC<{ features: string[] }> = ({features}) => {
   return (
     features &&
-    <div>
+    <div className={styles.modal_features}>
       {
         features
           .map((feature) => {
