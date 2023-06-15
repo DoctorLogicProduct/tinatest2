@@ -1,7 +1,7 @@
 import { TinaTemplate } from 'tinacms';
 
-export const spacingswitchBlock: TinaTemplate = {
-  name: 'spacingswitch',
+export const spacingSwitchBlock: TinaTemplate = {
+  name: 'spacingSwitch',
   label: 'Spacing Switch',
   ui: {
     defaultItem: {

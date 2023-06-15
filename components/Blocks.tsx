@@ -48,15 +48,15 @@ export const Blocks = (props: Home) => {
                   <Grid data={block} parentField={`blocks.${i}`} />
                 </div>
               );
-              case "HomeBlocksSpacingSwitch":
-                return (
-                  <div
-                    data-tinafield={`blocks.${i}`}
-                    key={i + block.__typename}
-                  >
-                    <SpacingSwitch data={block} parentField={`blocks.${i}`} />
-                  </div>
-                );
+            case "HomeBlocksSpacingSwitch":
+              return (
+                <div
+                  data-tinafield={`blocks.${i}`}
+                  key={i + block.__typename}
+                >
+                  <SpacingSwitch data={block} parentField={`blocks.${i}`} />
+                </div>
+              );
             default:
               return null;
           }
