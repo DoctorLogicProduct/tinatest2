@@ -1,12 +1,16 @@
-@import url("https://use.typekit.net/yvb0ibv.css");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&family=Space+Grotesk:wght@400;600&display=swap');
 @import "/public/styles/global.scss";
 
 // Global Styles
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     // background: linear-gradient(to bottom, #0e0725 0%,#3e4c5e 50%,#0e0725 100%);
     background: $color-1;
-    font-family: 'Proxima Nova', sans-serif;
+    font-family: 'Poppins', sans-serif;
     line-height: 1.8;
 }
 
@@ -17,12 +21,18 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 h1, h2 {
-    font-size: clamp(2rem, 6vw, 6rem);
+    font-size: clamp(2rem, 4vw, 5rem);
     margin: 0 0 20px;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
 }
 
 h3.tagline {
     color: $color-3;
+}
+
+p {
+    font-size: clamp(.8rem, .9vw, .9rem);
 }
 
 header {

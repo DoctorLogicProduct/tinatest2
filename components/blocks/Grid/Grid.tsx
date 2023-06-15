@@ -1,4 +1,5 @@
-import React, { Dispatch, FC, MouseEventHandler, SetStateAction, useId, useState } from "react";
+import React, { Dispatch, FC, MouseEventHandler, SetStateAction, useEffect, useId, useState } from "react";
+import { createPortal } from "react-dom";
 import { classNames } from "tinacms";
 
 import { HomeBlocksGrid, HomeBlocksGridGroups, HomeBlocksGridGroupsItems } from '../../../.tina/__generated__/types';
@@ -19,15 +20,19 @@ const GridItem = ({ data, tinaField, setSelectedItem }: GridItemParams) => {
   return (
     <div
       onClick={() => setSelectedItem(data)}
-      data-tinafield={`${tinaField}`}>
+      data-tinafield={`${tinaField}`}
+      className={styles.item}
+    >
       {(
         (data.image || '').length > 0 ?
-          <div
-            className={styles.image}
-            data-tinafield={`${tinaField}.image`}>
-            <img
-              src={data.image}
-              alt={data.image_alt} />
+          <div className={styles.item_wrapper}>
+            <div
+              className={styles.image}
+              data-tinafield={`${tinaField}.image`}>
+              <img
+                src={data.image}
+                alt={data.image_alt} />
+            </div>
             {data.title && (
               <h3
                 className={styles.image__headline}
@@ -107,22 +112,12 @@ const GridModal: FC<GridModalParams> = ({ item = {}, isOpen, onCloseClick }) => 
           onClick={onCloseClick}>
           X
         </button>
-        {(
-          (item.image || '').length > 0 ?
-            <div
-              className={styles.image__modal}>
-              <img
-                src={item.image}
-                alt={item.image_alt} />
-            </div> :
-            null
-        )}
-
+        <div className={styles.modal_text}>
         {item.title && (
-          <h3
+          <h2
             className={styles.headline}>
             {item.title}
-          </h3>
+          </h2>
         )}
         {item.text && (
           <p
@@ -140,6 +135,17 @@ const GridModal: FC<GridModalParams> = ({ item = {}, isOpen, onCloseClick }) => 
 
           </a>
         )}
+        </div>
+        {(
+          (item.image || '').length > 0 ?
+            <div
+              className={styles.image__modal}>
+              <img
+                src={item.image}
+                alt={item.image_alt} />
+            </div> :
+            null
+        )}
       </div>
     </div>
   );
@@ -148,8 +154,13 @@ const GridModal: FC<GridModalParams> = ({ item = {}, isOpen, onCloseClick }) => 
 export const Grid: BlockComponent<HomeBlocksGrid> = ({ data, parentField }) => {
   const [selectedItem, setSelectedItem] = useState<HomeBlocksGridGroupsItems>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rendered, setRendered] = useState(false);
   const gridToggleId = useId();
   const inputName = `grid-toggle-${gridToggleId}`;
+
+  useEffect(() => {
+    setRendered(true);
+  }, []);
 
   return (
     <div
@@ -167,11 +178,17 @@ export const Grid: BlockComponent<HomeBlocksGrid> = ({ data, parentField }) => {
             inputName={inputName}
             data={block} />
         ))}
-      <GridModal
-        item={selectedItem}
-        isOpen={isModalOpen}
-        onCloseClick={() => setIsModalOpen(false)}
-      />
+      {
+        rendered &&
+        createPortal(
+          <GridModal
+            item={selectedItem}
+            isOpen={isModalOpen}
+            onCloseClick={() => setIsModalOpen(false)}
+          />,
+          document.body
+        )
+      }
     </div>
   );
 };

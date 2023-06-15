@@ -23,7 +23,11 @@ export const Layout = (props) => {
           </Link>
         </nav> */}
       </header>
-      <main className={styles.main}>{props.children}</main>
+      <main className={styles.main}>
+        <h1>DoctorLogic Designs</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur aliquid aperiam minus enim odit iste quaerat. Exercitationem inventore, facere mollitia, id corrupti qui earum, nesciunt velit harum eveniet est rerum.</p>
+        {props.children}
+      </main>
     </div>
   )
 }
