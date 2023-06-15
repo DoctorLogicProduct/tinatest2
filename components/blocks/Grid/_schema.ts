@@ -58,12 +58,6 @@ export const gridBlock: TinaTemplate = {
           label: "Label",
         },
         {
-          type: "string",
-          name: "features",
-          label: "Features",
-          list: true,
-        },
-        {
           type: "object",
           name: "items",
           label: "Group Items",
@@ -88,23 +82,10 @@ export const gridBlock: TinaTemplate = {
               },
             },
             {
+              type: "string",
+              name: "features",
               label: "Features",
-              name: "feautres",
-              type: "object",
               list: true,
-              ui: {
-                itemProps: (item) => {
-                  // Field values are accessed by item?.<Field name>
-                  return { label: item?.title };
-                },
-              },
-              fields: [
-                {
-                  label: "Title",
-                  name: "title",
-                  type: "string",
-                },
-              ],
             },
             {
               type: 'image',

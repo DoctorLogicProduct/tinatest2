@@ -47,18 +47,18 @@ const GridItem = ({ data, tinaField, setSelectedItem }: GridItemParams) => {
   );
 };
 
-const GridGroupFeatures: FC<{ features: string[], tinaField: string }> = ({ features, tinaField }) => {
+22
+const GridGroupFeatures: FC<{ features: string[] }> = ({features}) => {
   return (
     features &&
     <div>
       {
         features
-          .map((feature, i) => {
-            const key = `${tinaField}.${i}`;
+          .map((feature) => {
+            const key = feature;
             return (
               <span
-                key={key}
-                data-tinafield={key}>
+                key={key}>
                 {feature}
               </span>
             );
@@ -97,10 +97,6 @@ const GridGroup = ({ setSelectedItem, inputName, checked, data, tinaField }: Gri
       </label>
       <div
         className={styles.group}>
-        <GridGroupFeatures
-          features={data.features}
-          tinaField={`${tinaField}.features`}
-        />
         {
           data.items.map((block, i) => {
             const key = `${tinaField}.items.${i}`;
@@ -158,6 +154,9 @@ const GridModal: FC<GridModalParams> = ({ item = {}, isOpen, onCloseClick }) => 
 
           </a>
         )}
+        <GridGroupFeatures
+          features={item.features}
+        />
         </div>
         {(
           (item.image || '').length > 0 ?
