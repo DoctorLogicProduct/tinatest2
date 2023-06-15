@@ -1,4 +1,5 @@
-import React, { Dispatch, FC, MouseEventHandler, SetStateAction, useId, useState } from "react";
+import React, { Dispatch, FC, MouseEventHandler, SetStateAction, useEffect, useId, useState } from "react";
+import { createPortal } from "react-dom";
 import { classNames } from "tinacms";
 
 import { HomeBlocksGrid, HomeBlocksGridGroups, HomeBlocksGridGroupsItems } from '../../../.tina/__generated__/types';
@@ -42,7 +43,26 @@ const GridItem = ({ data, tinaField, setSelectedItem }: GridItemParams) => {
   );
 };
 
-
+const GridGroupFeatures: FC<{ features: string[], tinaField: string }> = ({ features, tinaField }) => {
+  return (
+    features &&
+    <div>
+      {
+        features
+          .map((feature, i) => {
+            const key = `${tinaField}.${i}`;
+            return (
+              <span
+                key={key}
+                data-tinafield={key}>
+                {feature}
+              </span>
+            );
+          })
+      }
+    </div>
+  );
+};
 
 type GridGroupParams = {
   setSelectedItem: Dispatch<SetStateAction<HomeBlocksGridGroupsItems>>
@@ -73,6 +93,10 @@ const GridGroup = ({ setSelectedItem, inputName, checked, data, tinaField }: Gri
       </label>
       <div
         className={styles.group}>
+        <GridGroupFeatures
+          features={data.features}
+          tinaField={`${tinaField}.features`}
+        />
         {
           data.items.map((block, i) => {
             const key = `${tinaField}.items.${i}`;
@@ -148,8 +172,13 @@ const GridModal: FC<GridModalParams> = ({ item = {}, isOpen, onCloseClick }) => 
 export const Grid: BlockComponent<HomeBlocksGrid> = ({ data, parentField }) => {
   const [selectedItem, setSelectedItem] = useState<HomeBlocksGridGroupsItems>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rendered, setRendered] = useState(false);
   const gridToggleId = useId();
   const inputName = `grid-toggle-${gridToggleId}`;
+
+  useEffect(() => {
+    setRendered(true);
+  }, []);
 
   return (
     <div
@@ -167,11 +196,17 @@ export const Grid: BlockComponent<HomeBlocksGrid> = ({ data, parentField }) => {
             inputName={inputName}
             data={block} />
         ))}
-      <GridModal
-        item={selectedItem}
-        isOpen={isModalOpen}
-        onCloseClick={() => setIsModalOpen(false)}
-      />
+      {
+        rendered &&
+        createPortal(
+          <GridModal
+            item={selectedItem}
+            isOpen={isModalOpen}
+            onCloseClick={() => setIsModalOpen(false)}
+          />,
+          document.body
+        )
+      }
     </div>
   );
 };

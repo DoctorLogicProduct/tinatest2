@@ -58,6 +58,12 @@ export const gridBlock: TinaTemplate = {
           label: "Label",
         },
         {
+          type: "string",
+          name: "features",
+          label: "Features",
+          list: true,
+        },
+        {
           type: "object",
           name: "items",
           label: "Group Items",
