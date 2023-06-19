@@ -29,13 +29,13 @@ export const SpacingSwitch: BlockComponent<HomeBlocksSpacingSwitch> = ({ data, p
       label: 'Moderate Padding',
       // className: styles.moderate,
       isChecked: false,
-      padding: '20px',
+      padding: '4cqw',
     },
     {
       label: 'Heavy Padding',
       // className: styles.heavy,
       isChecked: false,
-      padding: '40px',
+      padding: '6cqw',
     }
   ];
 
@@ -64,8 +64,9 @@ export const SpacingSwitch: BlockComponent<HomeBlocksSpacingSwitch> = ({ data, p
       <div
         className={styles.spacingswitch__container}
       >
+        <h3>Website Spacing Options</h3>
         <div
-          className={styles.spacingswitch__toggles}
+          className={styles.toggles}
         >
           {
             toggleConfigs
@@ -76,7 +77,7 @@ export const SpacingSwitch: BlockComponent<HomeBlocksSpacingSwitch> = ({ data, p
                   onClick={() => {
                     setCheckedIndex(() => index);
                   }}>
-                  {label}
+                  <span>{label}</span>
                 </Toggle>
               ))
           }
@@ -120,10 +121,10 @@ export const SpacingSwitch: BlockComponent<HomeBlocksSpacingSwitch> = ({ data, p
             </div>
           </div>
           <div
-            className={styles.spacingswitch__item}
+            className={styles.item}
           >
             <div
-              className={styles.spacingswitch__item_text}
+              className={styles.item_text}
             >
               {data.text && (
                 <p
@@ -135,7 +136,7 @@ export const SpacingSwitch: BlockComponent<HomeBlocksSpacingSwitch> = ({ data, p
               )}
             </div>
             <div
-              className={styles.spacingswitch__item_image}
+              className={styles.item_image}
             >
               {data.image && (
                 <div

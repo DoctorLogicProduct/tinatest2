@@ -146,12 +146,11 @@ const GridModal: FC<GridModalParams> = ({ item = {}, isOpen, onCloseClick }) => 
         )}
         {item.btn_label && (
           <a
-            className={styles.button}
+            className={styles.btn_label}
             href={item.btn_link}>
             <span>
               {item.btn_label}
             </span>
-
           </a>
         )}
         <GridGroupFeatures
