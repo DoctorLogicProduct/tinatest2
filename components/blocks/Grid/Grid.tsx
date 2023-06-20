@@ -124,52 +124,52 @@ function initializer(params: { groups: HomeBlocksGridGroups[] }): GridState {
 }
 
 function reducer(state: GridState, action: GridAction): GridState {
-  switch (action.type) {
-    case 'selected': {
-      return setHasPrevNext({
-        ...state,
-        selectedGroupIndex: action.groupIndex,
-        selectedItemIndex: action.itemIndex,
-      });
+    switch (action.type) {
+      case 'selected': {
+        return setHasPrevNext({
+          ...state,
+          selectedGroupIndex: action.groupIndex,
+          selectedItemIndex: action.itemIndex,
+        });
+      }
+      case 'open_modal': {
+        return {
+          ...state,
+          isModalOpen: true,
+        };
+      }
+      case 'close_modal': {
+        return {
+          ...state,
+          isModalOpen: false,
+        };
+      }
+      case 'next': {
+        return setHasPrevNext({
+          ...state,
+          selectedItemIndex: state.selectedItemIndex + 1,
+        });
+      }
+      case 'prev': {
+        return setHasPrevNext({
+          ...state,
+          selectedItemIndex: state.selectedItemIndex - 1,
+        });
+      }
+      // default:
+      //   throw new Error('Unknown action: ' + action.type);
     }
-    case 'open_modal': {
-      return {
-        ...state,
-        isModalOpen: true,
-      };
-    }
-    case 'close_modal': {
-      return {
-        ...state,
-        isModalOpen: false,
-      };
-    }
-    case 'next': {
-      return setHasPrevNext({
-        ...state,
-        selectedItemIndex: state.selectedItemIndex + 1,
-      });
-    }
-    case 'prev': {
-      return setHasPrevNext({
-        ...state,
-        selectedItemIndex: state.selectedItemIndex - 1,
-      });
-    }
-    // default:
-    //   throw new Error('Unknown action: ' + action.type);
-  }
 
   function setHasPrevNext(state: GridState): GridState {
-    const selectedGroup = state?.groups?.[state.selectedGroupIndex];
+    const selectedGroup = state.groups?.[state.selectedGroupIndex];
 
-    const hasNext = selectedGroup?.items?.length > (state.selectedItemIndex + 1);
     const hasPrev = state.selectedItemIndex > 0;
+    const hasNext = selectedGroup?.items?.length > (state.selectedItemIndex + 1);
 
     return {
       ...state,
-      hasNext,
       hasPrev,
+      hasNext,
     };
   }
 }

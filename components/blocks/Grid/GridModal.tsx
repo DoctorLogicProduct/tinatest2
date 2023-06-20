@@ -39,14 +39,14 @@ export const GridModal: FC<GridModalParams> = ({
           {
             when: hasPrev,
             className: styles.modal_button_prev,
-            onClick: onNextClick,
+            onClick: onPrevClick,
             children: '<'
           }
         )}
         {makeButton({
           when: hasNext,
           className: styles.modal_button_next,
-          onClick: onPrevClick,
+          onClick: onNextClick,
           children: '>',
         })}
         <div
@@ -115,7 +115,6 @@ function GridGroupFeatures({ features }: { features: string[] }) {
 
 function makeButton({ when, children, ...attrs }: { when: boolean } & ButtonHTMLAttributes<HTMLButtonElement>) {
   return when ?
-    null :
     (
       <button
         {...attrs}
@@ -123,5 +122,6 @@ function makeButton({ when, children, ...attrs }: { when: boolean } & ButtonHTML
       >
         {children}
       </button>
-    );
+    ) :
+    null;
 }
