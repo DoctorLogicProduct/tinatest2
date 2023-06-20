@@ -38,14 +38,14 @@ export const GridModal: FC<GridModalParams> = ({
         {makeButton(
           {
             when: hasPrev,
-            className: styles.modal_button_prev,
+            className: styles.btn_prev,
             onClick: onPrevClick,
             children: '<'
           }
         )}
         {makeButton({
           when: hasNext,
-          className: styles.modal_button_next,
+          className: styles.btn_next,
           onClick: onNextClick,
           children: '>',
         })}

@@ -154,17 +154,17 @@
     cursor: pointer;
     background: transparent;
     color: $color-2;
+  }
 
-    &_next {
-      top: 45vh;
-      right: 20px;
-    }
+  .btn_next {
+    top: 45vh;
+    right: 20px;
+  }
 
-    &_prev {
-      top: 45vh;
-      right: unset;
-      left: 20px;
-    }
+  .btn_prev {
+    top: 45vh;
+    right: unset;
+    left: 20px;
   }
 
   .btn_label {
