@@ -1,33 +1,91 @@
 @import "/public/styles/global.scss";
 
 .spacingswitch {
+  container-type: inline-size;
+  padding: 120px 24px;
+
   img {
     max-width: 100%;
     display: block;
   }
+
+  h3 {
+    font-size: clamp(2rem, 2.5vw, 2.5rem);
+    margin: 0;
+  }
+  
+}
+
+.toggles {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 80px 24px;
+
+  @include tablet-min {
+    gap: 32px;
+  }
 }
 
 .toggle {
+  padding: 1.5cqw 2cqw;
+  border: solid 1px $color-3;
+  border-radius: 60px;
+  min-width: 150px;
+  text-align: center;
+  margin: 0;
+  background: transparent;
+  color: $color-2;
+  font-size: 16px;
+
+  span {
+    text-align: center;
+  }
+
   &__checked {
-    outline: 1px solid orange;
+    box-shadow: rgba(48, 198, 173, 0.4) 0px 4px 24px 0px;
   }
 }
 
 .items {
   --padding: 0px;
   padding: var(--padding);
+  background: rgba(14, 23, 45, 0.25);
+  border-radius: 16px;
+  border: solid 1px #323f4c;
+  overflow: hidden;
 }
 
 .item {
   @include grid;
   gap: calc(var(--padding) / 2);
+  padding: calc(var(--padding) / 2) 0;
+  transition: all .5s ease;
 
   &_image {
     grid-column: auto / span 24;
     order: -1;
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
 
     @include tablet-min {
-      grid-column: auto / span 14;
+      grid-column: auto / span 12;
+    }
+
+    img {
+      position: absolute;
+      inset: 0;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &:nth-of-type(even) {
+    .item_text {
+      order: -1;
     }
   }
 
@@ -40,7 +98,7 @@
     padding: 0 40px;
 
     @include tablet-min {
-      grid-column: auto / span 10;
+      grid-column: auto / span 12;
     }
   }
 }

@@ -65,7 +65,7 @@ export const GridModal: FC<GridModalParams> = ({
           )}
           {item.btn_label && (
             <a
-              className={styles.button}
+              className={styles.btn_label}
               href={item.btn_link}>
               <span>
                 {item.btn_label}
