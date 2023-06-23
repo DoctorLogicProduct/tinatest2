@@ -44,7 +44,8 @@ header {
     padding: 20px 40px;
     position: sticky;
     top: 0;
-    // background: $color-1;
+    background: conic-gradient(from 90deg at bottom right, $color-1, $color-4);
+    z-index: 10;
 
     img {
         max-width: 220px;
