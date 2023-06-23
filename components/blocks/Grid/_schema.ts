@@ -28,6 +28,9 @@ export const gridBlock: TinaTemplate = {
   ui: {
     previewSrc: "/blocks/features.png",
     defaultItem: {
+      itemProps: (item) => {
+        return { label: `${item?.groupLabel}`}
+      },
       groups: [
         makeDefaultGroup({
           groupLabel: 'Group 1',
@@ -47,6 +50,9 @@ export const gridBlock: TinaTemplate = {
       label: "Groups",
       list: true,
       ui: {
+        itemProps: (item) => {
+          return { label: `${item?.label}`}
+        },
         defaultItem: {
           ...makeDefaultGroup(),
         },
@@ -64,6 +70,9 @@ export const gridBlock: TinaTemplate = {
           list: true,
           ui: {
             defaultItem: {
+              itemProps: (item) => {
+                return { label: `${item?.title}`}
+              },
               ...makeDefaultGridItem(),
             },
           },

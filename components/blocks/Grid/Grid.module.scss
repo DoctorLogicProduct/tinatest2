@@ -79,6 +79,7 @@
   opacity: 1;
   transition: opacity .5s;
   overflow: scroll;
+  z-index: 20;
 
 
   &_content {
