@@ -5,6 +5,7 @@ import { imageText50Block } from '../components/blocks/ImageText50/_schema';
 import { featureBlock } from '../components/blocks/Features/_schema';
 import { gridBlock } from '../components/blocks/Grid/_schema';
 import { spacingSwitchBlock } from '../components/blocks/SpacingSwitch/_schema';
+import { symmetrySwitchBlock } from '../components/blocks/SymmetrySwitch/_schema';
 
 const schema = defineSchema({
   config: {
@@ -33,7 +34,7 @@ const schema = defineSchema({
           list: true,
           name: 'blocks',
           label: 'Sections',
-          templates: [heroBlock, imageText50Block, featureBlock, gridBlock, spacingSwitchBlock],
+          templates: [heroBlock, imageText50Block, featureBlock, gridBlock, spacingSwitchBlock, symmetrySwitchBlock],
         },
       ],
     },
