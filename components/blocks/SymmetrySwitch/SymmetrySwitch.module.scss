@@ -72,6 +72,7 @@
     border-radius: 24px;
     padding: 24px;
     margin: 0 0 16px;
+    transition: all .5s ease;
 
     @include tablet-min {
       grid-column: auto / span 12;

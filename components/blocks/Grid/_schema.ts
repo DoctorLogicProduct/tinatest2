@@ -69,10 +69,10 @@ export const gridBlock: TinaTemplate = {
           label: "Group Items",
           list: true,
           ui: {
+            itemProps: (item) => {
+              return { label: `${item?.title}`}
+            },
             defaultItem: {
-              itemProps: (item) => {
-                return { label: `${item?.title}`}
-              },
               ...makeDefaultGridItem(),
             },
           },
