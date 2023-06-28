@@ -1,11 +1,9 @@
-
+import { useTina } from "tinacms/dist/react";
 import { TinaMarkdown } from "tinacms/dist/rich-text";
+
+import { client } from "../tina/__generated__/client";
 import { Layout } from "../components/Layout";
-import { useTina } from "tinacms/dist/edit-state";
-import { client } from "../.tina/__generated__/client";
-import styles from "./index.module.scss";
-import type { TinaTemplate } from "tinacms";
-import { Blocks } from "../components/Blocks";
+import { Blocks } from '../components/Blocks';
 
 export default function Home(props) {
   // data passes though in production mode and data is updated to the sidebar data in edit-mode
@@ -27,8 +25,8 @@ export default function Home(props) {
           {JSON.stringify(data.home, null, 2)}
         </pre>
       </code> */}
-    <Blocks {...(data?.home || [])} />  
-    <TinaMarkdown content={content} />
+      <Blocks {...(data?.home || [])} />
+      <TinaMarkdown content={content} />
     </Layout>
   );
 }

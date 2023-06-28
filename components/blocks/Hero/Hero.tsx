@@ -1,5 +1,5 @@
 import * as React from "react";
-import { HomeBlocksHero } from '../../../.tina/__generated__/types';
+import { HomeBlocksHero } from '../../../tina/__generated__/types';
 import styles from "./Hero.module.scss";
 import { BlockComponent } from '../_shared';
 

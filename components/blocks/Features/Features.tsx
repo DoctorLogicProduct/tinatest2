@@ -1,5 +1,5 @@
 import * as React from "react";
-import { HomeBlocksFeatures, HomeBlocksFeaturesItems } from '../../../.tina/__generated__/types';
+import { HomeBlocksFeatures, HomeBlocksFeaturesItems } from '../../../tina/__generated__/types';
 import { BlockComponent } from '../_shared';
 
 import styles from "./Features.module.scss";
@@ -19,7 +19,7 @@ const Feature = ({ data, tinaField }: FeatureParams) => {
     >
       {(
         (data.image || []).length > 0 ?
-          <div 
+          <div
           className={styles.image}
           data-tinafield={`${tinaField}.image`}
           >
@@ -55,7 +55,7 @@ const Feature = ({ data, tinaField }: FeatureParams) => {
           >
             {data.btn_label}
           </span>
-          
+
         </a>
       )}
     </div>

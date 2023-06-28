@@ -1,5 +1,5 @@
 import * as React from "react";
-import { HomeBlocksImageText50 } from '../../../.tina/__generated__/types';
+import { HomeBlocksImageText50 } from '../../../tina/__generated__/types';
 import styles from "./ImageText50.module.scss";
 import { BlockComponent } from '../_shared';
 
