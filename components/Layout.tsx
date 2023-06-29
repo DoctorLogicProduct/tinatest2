@@ -7,8 +7,8 @@ export const Layout = (props) => {
     <div
     >
       <Head>
-        <title>Tina App</title>
-        <meta name="description" content="A TinaCMS Application" />
+        <title>DoctorLogic Design Gallery</title>
+        <meta name="description" content="Welcome to the DoctorLogic design gallery." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header>
@@ -25,7 +25,7 @@ export const Layout = (props) => {
       </header>
       <main className={styles.main}>
         <h1>DoctorLogic Designs</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur aliquid aperiam minus enim odit iste quaerat. Exercitationem inventore, facere mollitia, id corrupti qui earum, nesciunt velit harum eveniet est rerum.</p>
+        <p>Welcome to the DoctorLogic Design Gallery.  Take a look at various designs produced by the award winning DoctorLogic design team to get inspiration for your new website.</p>
         {props.children}
       </main>
     </div>
