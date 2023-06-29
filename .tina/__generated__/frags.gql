@@ -1,0 +1,75 @@
+fragment HomeParts on Home {
+  blocks {
+    __typename
+    ... on HomeBlocksHero {
+      tagline
+      headline
+      text
+      image
+      alt_text
+      btn_label
+      btn_link
+    }
+    ... on HomeBlocksImageText50 {
+      template
+      custom
+      tagline
+      headline
+      headline_class
+      text
+      btn_label
+      btn_link
+      image
+      image_alt
+    }
+    ... on HomeBlocksFeatures {
+      items {
+        __typename
+        title
+        text
+        image
+        image_alt
+        btn_link
+        btn_label
+      }
+      layout
+    }
+    ... on HomeBlocksGrid {
+      groups {
+        __typename
+        label
+        items {
+          __typename
+          title
+          text
+          features
+          image
+          image_alt
+          btn_link
+          btn_label
+        }
+      }
+      layout
+    }
+    ... on HomeBlocksSpacingSwitch {
+      text
+      image
+      alt_text
+    }
+    ... on HomeBlocksSymmetrySwitch {
+      image
+      alt_text
+    }
+  }
+}
+
+fragment PageParts on Page {
+  hero
+  body
+}
+
+fragment PostParts on Post {
+  title
+  imgSrc
+  body
+}
