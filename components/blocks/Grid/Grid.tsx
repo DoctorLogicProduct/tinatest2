@@ -1,7 +1,7 @@
-import React, { useEffect, useId, useReducer, useState } from "react";
+import React, { useEffect, useId, useReducer, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { HomeBlocksGrid, HomeBlocksGridGroups } from '../../../.tina/__generated__/types';
+import { HomeBlocksGrid, HomeBlocksGridGroups } from '../../../tina/__generated__/types';
 import { BlockComponent } from '../_shared';
 
 import { GridGroup } from './GridGroup';
@@ -124,41 +124,41 @@ function initializer(params: { groups: HomeBlocksGridGroups[] }): GridState {
 }
 
 function reducer(state: GridState, action: GridAction): GridState {
-    switch (action.type) {
-      case 'selected': {
-        return setHasPrevNext({
-          ...state,
-          selectedGroupIndex: action.groupIndex,
-          selectedItemIndex: action.itemIndex,
-        });
-      }
-      case 'open_modal': {
-        return {
-          ...state,
-          isModalOpen: true,
-        };
-      }
-      case 'close_modal': {
-        return {
-          ...state,
-          isModalOpen: false,
-        };
-      }
-      case 'next': {
-        return setHasPrevNext({
-          ...state,
-          selectedItemIndex: state.selectedItemIndex + 1,
-        });
-      }
-      case 'prev': {
-        return setHasPrevNext({
-          ...state,
-          selectedItemIndex: state.selectedItemIndex - 1,
-        });
-      }
-      // default:
-      //   throw new Error('Unknown action: ' + action.type);
+  switch (action.type) {
+    case 'selected': {
+      return setHasPrevNext({
+        ...state,
+        selectedGroupIndex: action.groupIndex,
+        selectedItemIndex: action.itemIndex,
+      });
     }
+    case 'open_modal': {
+      return {
+        ...state,
+        isModalOpen: true,
+      };
+    }
+    case 'close_modal': {
+      return {
+        ...state,
+        isModalOpen: false,
+      };
+    }
+    case 'next': {
+      return setHasPrevNext({
+        ...state,
+        selectedItemIndex: state.selectedItemIndex + 1,
+      });
+    }
+    case 'prev': {
+      return setHasPrevNext({
+        ...state,
+        selectedItemIndex: state.selectedItemIndex - 1,
+      });
+    }
+    // default:
+    //   throw new Error('Unknown action: ' + action.type);
+  }
 
   function setHasPrevNext(state: GridState): GridState {
     const selectedGroup = state.groups?.[state.selectedGroupIndex];

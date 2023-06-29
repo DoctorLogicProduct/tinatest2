@@ -1,7 +1,7 @@
 import React, { CSSProperties, FC, PropsWithChildren, useState } from "react";
 import { classNames } from 'tinacms';
 
-import { HomeBlocksSpacingSwitch } from '../../../.tina/__generated__/types';
+import { HomeBlocksSpacingSwitch } from '../../../tina/__generated__/types';
 import { BlockComponent } from '../_shared';
 
 import styles from "./SpacingSwitch.module.scss";

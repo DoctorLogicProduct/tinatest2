@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { HomeBlocksGridGroupsItems } from '../../../.tina/__generated__/types';
+import { HomeBlocksGridGroupsItems } from '../../../tina/__generated__/types';
 
 import styles from "./Grid.module.scss";
 

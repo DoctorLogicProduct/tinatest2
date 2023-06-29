@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes, FC, MouseEventHandler } from 'react';
 import { classNames } from 'tinacms';
 
-import { HomeBlocksGridGroupsItems, Maybe } from '../../../.tina/__generated__/types';
+import { HomeBlocksGridGroupsItems, Maybe } from '../../../tina/__generated__/types';
 
 import styles from "./Grid.module.scss";
 
