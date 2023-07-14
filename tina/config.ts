@@ -6,6 +6,7 @@ import { featureBlock } from '../components/blocks/Features/_schema';
 import { gridBlock } from '../components/blocks/Grid/_schema';
 import { spacingSwitchBlock } from '../components/blocks/SpacingSwitch/_schema';
 import { symmetrySwitchBlock } from '../components/blocks/SymmetrySwitch/_schema';
+import { rotatorBlock } from "../components/blocks/Rotator/_schema";
 
 export default defineConfig({
   clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID,
@@ -47,6 +48,7 @@ export default defineConfig({
               gridBlock,
               spacingSwitchBlock,
               symmetrySwitchBlock,
+              rotatorBlock,
             ],
           },
         ],

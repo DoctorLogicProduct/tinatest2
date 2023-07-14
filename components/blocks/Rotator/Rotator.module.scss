@@ -1,0 +1,175 @@
+@import "/public/styles/global.scss";
+
+// todo: this is just POC, you'll probably want to replace it!
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  container-type: inline-size;
+
+
+  input {
+    display: none;
+  }
+
+  label {
+    padding: 1cqw;
+    border: solid 1px $color-3;
+    border-radius: 60px;
+    min-width: 150px;
+    text-align: center;
+    margin: 6cqw 1.5cqw 0;
+  }
+
+  input:checked + label {
+    box-shadow: rgba(48, 198, 173, 0.4) 0px 4px 24px 0px;
+  }
+}
+
+.group {
+  display: none;
+  flex: 1 1 100%;
+  order: 1;
+  background: transparentize($color-4, .75);
+  border-radius: 16px;
+  border: solid 1px #323f4c;
+  padding: 6cqw;
+  margin-top: 6cqw;
+
+
+  input:checked + label + & {
+    @include grid;
+    gap: 2cqw;
+  }
+}
+
+.item {
+  grid-column: auto / span 24;
+
+  @include tablet-min {
+    grid-column: auto / span 6;
+  }
+
+}
+
+.image {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  border-radius: 16px;
+  border: solid 1px #323f4c;
+
+  img {
+    max-width: 100%;
+    display: block;
+    position: absolute;
+    inset: 0;
+  }
+}
+
+// end todo area...
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparentize($color-1, .05);
+  opacity: 1;
+  transition: opacity .5s;
+  overflow: scroll;
+  z-index: 20;
+
+
+  &_content {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+
+    @include desktop-min {
+      padding: 80px;
+    }
+
+  }
+
+  &_text {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+
+    h2,
+    p {
+      color: $color-2;
+      text-align: center;
+    }
+  }
+
+  &_close {
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  &_features {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 24px;
+
+    @include tablet-min {
+      gap: 24px;
+    }
+
+
+    span {
+      color: $color-2;
+      padding: 8px 24px;
+      background: $color-4;
+      border-radius: 60px;
+      min-width: 150px;
+      text-align: center;
+      border: solid 1px #aab2b8;
+    }
+  }
+
+  &_button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    left: auto;
+    padding: 12px;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid 1px $color-2;
+    cursor: pointer;
+    background: transparent;
+    color: $color-2;
+  }
+
+  .btn_next {
+    top: 45vh;
+    right: 20px;
+  }
+
+  .btn_prev {
+    top: 45vh;
+    right: unset;
+    left: 20px;
+  }
+
+  .btn_label {
+    text-align: center;
+    color: $color-3;
+  }
+}

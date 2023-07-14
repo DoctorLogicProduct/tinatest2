@@ -6,6 +6,7 @@ import { Features } from "./blocks/Features/Features";
 import { Grid } from "./blocks/Grid/Grid";
 import { SpacingSwitch } from "./blocks/SpacingSwitch/SpacingSwitch";
 import { SymmetrySwitch } from "./blocks/SymmetrySwitch/SymmetrySwitch";
+import { Rotator } from "./blocks/Rotator/Rotator";
 
 export const Blocks = (props: Home) => {
   return (
@@ -67,6 +68,15 @@ export const Blocks = (props: Home) => {
                     <SymmetrySwitch data={block} parentField={`blocks.${i}`} />
                   </div>
                 );
+                case "HomeBlocksRotator":
+                  return (
+                    <div
+                      data-tinafield={`blocks.${i}`}
+                      key={i + block.__typename}
+                    >
+                      <Rotator data={block} parentField={`blocks.${i}`} />
+                    </div>
+                  );
             default:
               return null;
           }
