@@ -1,0 +1,25 @@
+@import "/public/styles/mixins.scss";
+
+.items {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 0;
+  list-style: none;
+}
+
+.item {
+  padding: 1cqw;
+  border: solid 1px $color-3;
+  border-radius: 60px;
+  min-width: 150px;
+  text-align: center;
+  margin: 6cqw 1.5cqw 0;
+  cursor: pointer;
+
+  &_selected {
+    box-shadow: rgba(48, 198, 173, 0.4) 0px 4px 24px 0px;
+  }
+}

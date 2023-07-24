@@ -1,0 +1,29 @@
+.item {
+  width: 300px;
+  cursor: pointer;
+}
+
+.wrapper {
+  scale: 0.9;
+  transition: scale 0.5s;
+}
+
+.selected {
+  .wrapper {
+    scale: 1;
+  }
+}
+
+.image {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  border-radius: 16px;
+  border: solid 1px #323f4c;
+
+  img {
+    display: block;
+    inset: 0;
+    width: 100%;
+  }
+}

@@ -1,26 +1,32 @@
-import React, { useEffect, useId, useReducer, useRef, useState } from "react";
+import React, { MutableRefObject, useReducer, useRef } from "react";
 import { createPortal } from "react-dom";
+import Flickity from 'react-flickity-component';
 
 import { HomeBlocksRotator, HomeBlocksRotatorItems } from '../../../tina/__generated__/types';
+import { useHasRendered } from '../../../hooks/useHasRendered';
 import { BlockComponent } from '../_shared';
 
+import { RotatorFilters } from './RotatorFilters';
+import { RotatorItem } from './RotatorItem';
 import { RotatorModal } from './RotatorModal';
 
 import styles from "./Rotator.module.scss";
 
 interface RotatorState {
   items: HomeBlocksRotatorItems[]
-  selectedGroupIndex: number
+  selectedFilter: string
   selectedItemIndex: number
   isModalOpen: boolean
-  hasNext: boolean
-  hasPrev: boolean
 }
 
 type RotatorActionSetSelected = {
-  type: 'selected'
-  groupIndex: number
+  type: 'select'
   itemIndex: number
+}
+
+type RotatorActionSetSelectedFilter = {
+  type: 'filter'
+  filter: string
 }
 
 type RotatorActionOpenModal = {
@@ -39,139 +45,221 @@ type RotatorActionPrev = {
   type: 'prev'
 }
 
-type RotatorAction = RotatorActionSetSelected | RotatorActionOpenModal | RotatorActionCloseModal | RotatorActionNext | RotatorActionPrev
+type RotatorAction = RotatorActionSetSelected | RotatorActionSetSelectedFilter | RotatorActionOpenModal | RotatorActionCloseModal | RotatorActionNext | RotatorActionPrev
 
 export const Rotator: BlockComponent<HomeBlocksRotator> = ({ data, parentField }) => {
+  const flickityRef = useRef<Flickity>();
+  const draggingRef = useRef<boolean>(false);
+
+  const [state, dispatch] = useReducer(makeReducer(flickityRef), { items: data.items ?? [] }, initializer);
+  const {
+    items,
+    selectedFilter,
+    selectedItemIndex,
+    isModalOpen,
+  } = state;
+
+  const hasRendered = useHasRendered();
+
+  const selectedItem = items?.[selectedItemIndex];
+  const hasPrev = selectedItemIndex > 0;
+  const hasNext = (items?.length > (selectedItemIndex + 1)) ?? false;
+
+  // consolidate unique features into a single list
+  const features = items
+    .reduce((existingFeatures, item) => {
+      item
+        .features
+        .forEach(feature => {
+          const normalized = feature.trim().toLowerCase();
+
+          if (!existingFeatures.some(f => f.key === normalized)) {
+            existingFeatures.push({
+              key: normalized,
+              label: feature,
+            });
+          }
+        });
+
+      return existingFeatures;
+    }, [] as { key: string, label: string }[])
+    .map(entry => entry.label);
+
+  // filter the items based on the current filter
+  const filteredItems = items
+    .filter(item => {
+      if (!selectedFilter) {
+        return true;
+      }
+
+      return item
+        .features
+        .some(feature => feature === selectedFilter);
+    });
+
   return (
-    <div className="bob">Bob</div>
+    <div
+      className={styles.rotator}
+    >
+      <RotatorFilters
+        selected={selectedFilter}
+        features={features}
+        onChange={handleFiltersOnChange}
+      />
+      <Flickity
+        flickityRef={flickityRefSetup}
+        options={{
+          cellAlign: 'center',
+          pageDots: false,
+          prevNextButtons: false,
+          wrapAround: true,
+        }}
+      >
+        {
+          filteredItems
+            .map((item, index) => {
+              const selected = selectedItemIndex === index;
+              return (
+                <RotatorItem
+                  key={item.title}
+                  data={item}
+                  selected={selected}
+                  onClick={() => handleItemOnClick(index)}
+                  tinaField={`${parentField}.items.${index}`}
+                />
+              );
+            })
+        }
+      </Flickity>
+      {
+        // we must use hasRendered because SSR will complain that `document` doesn't exist
+        // and if we just check for `globalThis?.document` the initial renders won't match
+        hasRendered &&
+        createPortal(
+          <RotatorModal
+            item={selectedItem}
+            isOpen={isModalOpen}
+            onCloseClick={() => dispatch({ type: 'close_modal' })}
+            hasNext={hasNext}
+            onNextClick={() => dispatch({ type: 'next' })}
+            hasPrev={hasPrev}
+            onPrevClick={() => dispatch({ type: 'prev' })}
+          />,
+          document.body
+        )
+      }
+    </div >
   );
-//   const [state, dispatch] = useReducer(reducer, { items: data.items }, initializer);
-//   const {
-//     selectedGroupIndex,
-//     selectedItemIndex,
-//     isModalOpen,
-//     hasNext,
-//     hasPrev,
-//   } = state;
-//   const [hasRendered, setHasRendered] = useState(false);
-//   const gridToggleId = useId();
-//   const inputName = `grid-toggle-${gridToggleId}`;
 
-//   const selectedGroup = data.groups?.[selectedGroupIndex];
-//   const selectedItem = selectedGroup?.items?.[selectedItemIndex];
+  function handleFiltersOnChange(newFilter: string): void {
+    // filter the list
+    dispatch({
+      type: 'filter',
+      filter: newFilter === selectedFilter ? '' : newFilter,
+    });
+    // select the first item
+    dispatch({
+      type: 'select',
+      itemIndex: 0,
+    });
+  }
 
-//   useEffect(() => {
-//     setHasRendered(true);
-//   }, []);
+  function flickityRefSetup(flkty: Flickity): void {
+    flickityRef.current = flkty;
 
-//   return (
-//     <div
-//       className={`${styles.grid} ${getLayoutClass(data.layout)}`}>
-//       {/* {data.groups &&
-//         data.groups.map((block, groupIndex) => (
-//           <GridGroup
-//             onGroupSelected={() => {
-//               dispatch({
-//                 type: 'selected',
-//                 groupIndex,
-//                 itemIndex: 0,
-//               });
-//             }}
-//             onItemSelected={itemIndex => {
-//               dispatch({
-//                 type: 'selected',
-//                 groupIndex,
-//                 itemIndex,
-//               });
-//               dispatch({ type: 'open_modal' });
-//             }}
-//             key={groupIndex}
-//             tinaField={`${parentField}.groups.${groupIndex}`}
-//             checked={groupIndex === selectedGroupIndex}
-//             inputName={inputName}
-//             data={block} />
-//         ))} */}
-//       {
-//         hasRendered &&
-//         createPortal(
-//           <RotatorModal
-//             item={selectedItem}
-//             isOpen={isModalOpen}
-//             onCloseClick={() => dispatch({ type: 'close_modal' })}
-//             hasNext={hasNext}
-//             onNextClick={() => dispatch({ type: 'next' })}
-//             hasPrev={hasPrev}
-//             onPrevClick={() => dispatch({ type: 'prev' })}
-//           />,
-//           document.body
-//         )
-//       }
-//     </div>
-//   );
+    // handle flickity select event
+    flkty.on('select', (index: number) => {
+      dispatch({
+        type: 'select',
+        itemIndex: index,
+      });
+    });
+
+    // handle flickity drag start/end events
+    flkty.on('dragStart', () => draggingRef.current = true);
+    flkty.on('dragEnd', () => {
+      // queue this action so the item onClick can see that there is a drag
+      setTimeout(() => draggingRef.current = false, 1);
+    });
+  }
+
+  function handleItemOnClick(itemIndex: number): void {
+    // must not be dragging
+    if (!draggingRef.current) {
+      // if the item is not selected, select it
+      if (selectedItemIndex !== itemIndex) {
+        dispatch({
+          type: 'select',
+          itemIndex,
+        });
+      }
+
+      dispatch({
+        type: 'open_modal',
+      });
+    }
+  }
 };
 
-function getLayoutClass(layout: string | null) {
-  return styles[`grid--${layout}`];
+function initializer(params: { items: HomeBlocksRotatorItems[] }): RotatorState {
+  return {
+    items: params.items,
+    selectedFilter: '',
+    selectedItemIndex: 0,
+    isModalOpen: false,
+  };
 }
 
-// function initializer(params: { groups: HomeBlocksGridGroups[] }): RotatorState {
-//   return {
-//     groups: params.groups,
-//     selectedGroupIndex: 0,
-//     selectedItemIndex: 0,
-//     isModalOpen: false,
-//     hasNext: false,
-//     hasPrev: false,
-//   };
-// }
+function makeReducer(flktyRef: MutableRefObject<Flickity>) {
+  return function reducer(state: RotatorState, action: RotatorAction): RotatorState {
+    switch (action.type) {
+      case 'select': {
+        return ensureFlickityMatches({
+          ...state,
+          selectedItemIndex: action.itemIndex,
+        });
+      }
+      case 'filter': {
+        // filter the list
+        return {
+          ...state,
+          selectedFilter: action.filter,
+        };
+      }
+      case 'open_modal': {
+        return {
+          ...state,
+          isModalOpen: true,
+        };
+      }
+      case 'close_modal': {
+        return {
+          ...state,
+          isModalOpen: false,
+        };
+      }
+      case 'next': {
+        return ensureFlickityMatches({
+          ...state,
+          selectedItemIndex: state.selectedItemIndex + 1,
+        });
+      }
+      case 'prev': {
+        return ensureFlickityMatches({
+          ...state,
+          selectedItemIndex: state.selectedItemIndex - 1,
+        });
+      }
+      // default:
+      //   throw new Error('Unknown action: ' + action.type);
+    }
+  };
 
-// function reducer(state: RotatorState, action: RotatorAction): RotatorState {
-//   switch (action.type) {
-//     case 'selected': {
-//       return setHasPrevNext({
-//         ...state,
-//         selectedGroupIndex: action.groupIndex,
-//         selectedItemIndex: action.itemIndex,
-//       });
-//     }
-//     case 'open_modal': {
-//       return {
-//         ...state,
-//         isModalOpen: true,
-//       };
-//     }
-//     case 'close_modal': {
-//       return {
-//         ...state,
-//         isModalOpen: false,
-//       };
-//     }
-//     case 'next': {
-//       return setHasPrevNext({
-//         ...state,
-//         selectedItemIndex: state.selectedItemIndex + 1,
-//       });
-//     }
-//     case 'prev': {
-//       return setHasPrevNext({
-//         ...state,
-//         selectedItemIndex: state.selectedItemIndex - 1,
-//       });
-//     }
-//     // default:
-//     //   throw new Error('Unknown action: ' + action.type);
-//   }
+  function ensureFlickityMatches(state: RotatorState): RotatorState {
+    if (flktyRef.current && flktyRef.current.selectedIndex !== state.selectedItemIndex) {
+      flktyRef.current.select(state.selectedItemIndex);
+    }
 
-//   function setHasPrevNext(state: RotatorState): RotatorState {
-//     const selectedGroup = state.groups?.[state.selectedGroupIndex];
-
-//     const hasPrev = state.selectedItemIndex > 0;
-//     const hasNext = selectedGroup?.items?.length > (state.selectedItemIndex + 1);
-
-//     return {
-//       ...state,
-//       hasPrev,
-//       hasNext,
-//     };
-//   }
-// }
+    return state;
+  }
+}
