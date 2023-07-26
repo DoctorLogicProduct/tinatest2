@@ -1,3 +1,7 @@
 .rotator {
   container-type: inline-size;
 }
+
+.flickity-viewport {
+  overflow: hidden !important;
+}

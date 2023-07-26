@@ -18,7 +18,7 @@ export const RotatorBlock: BlockComponent<HomeBlocksRotator> = ({
   const { items = [], rows = [] } = data;
 
   return (
-    <div>
+    <div className={styles.rotator_block}>
       {rows
         // make sure each row has a feature and each feature only appears once
         .reduce((cleanedRows, row) => {

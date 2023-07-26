@@ -5,6 +5,7 @@
 
 * {
     box-sizing: border-box;
+    outline: none;
 }
 
 body {
@@ -51,5 +52,9 @@ header {
         max-width: 220px;
         width: 20%;
     }
+}
+
+.flickity-viewport {
+    overflow: hidden !important;
 }
  

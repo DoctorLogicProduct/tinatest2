@@ -92,6 +92,7 @@ export const Rotator: FC<RotatorProps> = (props) => {
           pageDots: false,
           prevNextButtons: false,
           wrapAround: true,
+          initialIndex: 3,
         }}
       >
         {

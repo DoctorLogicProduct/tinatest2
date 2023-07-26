@@ -3,7 +3,8 @@ import { Template } from 'tinacms';
 const availableTags = [
   'Featured',
   'Modern',
-  'Traditional'
+  'Traditional',
+  'Unique',
 ];
 
 function makeDefaultRotatorItem({ title = '', text = '', image = '' } = {}) {

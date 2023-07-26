@@ -1,5 +1,5 @@
 .item {
-  width: 300px;
+  width: 20%;
   cursor: pointer;
 }
 
@@ -9,6 +9,7 @@
 }
 
 .selected {
+  transform: translateX(0) !important;
   .wrapper {
     scale: 1;
   }
@@ -16,7 +17,7 @@
 
 .image {
   position: relative;
-  aspect-ratio: 3/4;
+  aspect-ratio: 3/6;
   overflow: hidden;
   border-radius: 16px;
   border: solid 1px #323f4c;
@@ -27,3 +28,4 @@
     width: 100%;
   }
 }
+
