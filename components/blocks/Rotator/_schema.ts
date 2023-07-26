@@ -10,14 +10,8 @@ function makeDefaultRotatorItem({ title = '', text = '', image = '' } = {}) {
   return {
     title: title || "Here's Another Item",
     text: text || "This is where you might talk about the item, if this wasn't just filler text.",
-    image:  image || "",
+    image: image || "",
     image_alt: "This is the image alt text.",
-    // there is no `icon` field on the
-    // icon: {
-    //     color: "",
-    //     style: "float",
-    //     name: "",
-    // },
   };
 }
 
@@ -30,6 +24,7 @@ export const rotatorBlock: Template = {
       itemProps: (item) => {
         return { label: `${item?.groupLabel}` }
       },
+      availableFeatures: availableTags,
       items: [
         makeDefaultRotatorItem({
           title: 'New Site',
@@ -40,6 +35,28 @@ export const rotatorBlock: Template = {
     },
   },
   fields: [
+    {
+      type: "object",
+      name: "rows",
+      label: "Rows",
+      list: true,
+      ui: {
+        itemProps: (item) => ({ label: item?.label ?? item?.feature ?? 'New row' }),
+      },
+      fields: [
+        {
+          type: "string",
+          name: "feature",
+          label: "Feature",
+          options: availableTags,
+        },
+        {
+          type: 'string',
+          name: 'label',
+          label: 'Label',
+        }
+      ],
+    },
     {
       type: "object",
       name: "items",
@@ -73,6 +90,9 @@ export const rotatorBlock: Template = {
           label: "Features",
           list: true,
           options: availableTags,
+          ui: {
+
+          },
         },
         {
           type: 'image',

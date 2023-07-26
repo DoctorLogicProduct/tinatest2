@@ -1,20 +1,17 @@
-import React, { MutableRefObject, useReducer, useRef } from "react";
+import React, { FC, MutableRefObject, useReducer, useRef } from "react";
 import { createPortal } from "react-dom";
 import Flickity from 'react-flickity-component';
 
-import { HomeBlocksRotator, HomeBlocksRotatorItems } from '../../../tina/__generated__/types';
-import { useHasRendered } from '../../../hooks/useHasRendered';
-import { BlockComponent } from '../_shared';
+import { HomeBlocksRotatorItems } from '../../../tina/__generated__/types';
+import { useIfHasRendered } from '../../../hooks/useIfHasRendered';
 
-import { RotatorFilters } from './RotatorFilters';
 import { RotatorItem } from './RotatorItem';
 import { RotatorModal } from './RotatorModal';
 
 import styles from "./Rotator.module.scss";
 
-interface RotatorState {
+type RotatorState = {
   items: HomeBlocksRotatorItems[]
-  selectedFilter: string
   selectedItemIndex: number
   isModalOpen: boolean
 }
@@ -22,11 +19,6 @@ interface RotatorState {
 type RotatorActionSetSelected = {
   type: 'select'
   itemIndex: number
-}
-
-type RotatorActionSetSelectedFilter = {
-  type: 'filter'
-  filter: string
 }
 
 type RotatorActionOpenModal = {
@@ -45,21 +37,25 @@ type RotatorActionPrev = {
   type: 'prev'
 }
 
-type RotatorAction = RotatorActionSetSelected | RotatorActionSetSelectedFilter | RotatorActionOpenModal | RotatorActionCloseModal | RotatorActionNext | RotatorActionPrev
+type RotatorAction = RotatorActionSetSelected | RotatorActionOpenModal | RotatorActionCloseModal | RotatorActionNext | RotatorActionPrev
 
-export const Rotator: BlockComponent<HomeBlocksRotator> = ({ data, parentField }) => {
+export type RotatorProps = {
+  items: HomeBlocksRotatorItems[]
+  parentField: string
+}
+
+export const Rotator: FC<RotatorProps> = (props) => {
+  const { parentField } = props;
+
   const flickityRef = useRef<Flickity>();
   const draggingRef = useRef<boolean>(false);
 
-  const [state, dispatch] = useReducer(makeReducer(flickityRef), { items: data.items ?? [] }, initializer);
+  const [state, dispatch] = useReducer(makeReducer(flickityRef), {}, () => initializer(props));
   const {
     items,
-    selectedFilter,
     selectedItemIndex,
     isModalOpen,
   } = state;
-
-  const hasRendered = useHasRendered();
 
   const selectedItem = items?.[selectedItemIndex];
   const hasPrev = selectedItemIndex > 0;
@@ -85,27 +81,10 @@ export const Rotator: BlockComponent<HomeBlocksRotator> = ({ data, parentField }
     }, [] as { key: string, label: string }[])
     .map(entry => entry.label);
 
-  // filter the items based on the current filter
-  const filteredItems = items
-    .filter(item => {
-      if (!selectedFilter) {
-        return true;
-      }
-
-      return item
-        .features
-        .some(feature => feature === selectedFilter);
-    });
-
   return (
     <div
       className={styles.rotator}
     >
-      <RotatorFilters
-        selected={selectedFilter}
-        features={features}
-        onChange={handleFiltersOnChange}
-      />
       <Flickity
         flickityRef={flickityRefSetup}
         options={{
@@ -116,7 +95,7 @@ export const Rotator: BlockComponent<HomeBlocksRotator> = ({ data, parentField }
         }}
       >
         {
-          filteredItems
+          items
             .map((item, index) => {
               const selected = selectedItemIndex === index;
               return (
@@ -134,35 +113,23 @@ export const Rotator: BlockComponent<HomeBlocksRotator> = ({ data, parentField }
       {
         // we must use hasRendered because SSR will complain that `document` doesn't exist
         // and if we just check for `globalThis?.document` the initial renders won't match
-        hasRendered &&
-        createPortal(
-          <RotatorModal
-            item={selectedItem}
-            isOpen={isModalOpen}
-            onCloseClick={() => dispatch({ type: 'close_modal' })}
-            hasNext={hasNext}
-            onNextClick={() => dispatch({ type: 'next' })}
-            hasPrev={hasPrev}
-            onPrevClick={() => dispatch({ type: 'prev' })}
-          />,
-          document.body
+        useIfHasRendered(() =>
+          createPortal(
+            <RotatorModal
+              item={selectedItem}
+              isOpen={isModalOpen}
+              onCloseClick={() => dispatch({ type: 'close_modal' })}
+              hasNext={hasNext}
+              onNextClick={() => dispatch({ type: 'next' })}
+              hasPrev={hasPrev}
+              onPrevClick={() => dispatch({ type: 'prev' })}
+            />,
+            document.body
+          )
         )
       }
     </div >
   );
-
-  function handleFiltersOnChange(newFilter: string): void {
-    // filter the list
-    dispatch({
-      type: 'filter',
-      filter: newFilter === selectedFilter ? '' : newFilter,
-    });
-    // select the first item
-    dispatch({
-      type: 'select',
-      itemIndex: 0,
-    });
-  }
 
   function flickityRefSetup(flkty: Flickity): void {
     flickityRef.current = flkty;
@@ -201,10 +168,9 @@ export const Rotator: BlockComponent<HomeBlocksRotator> = ({ data, parentField }
   }
 };
 
-function initializer(params: { items: HomeBlocksRotatorItems[] }): RotatorState {
+function initializer(params: RotatorProps): RotatorState {
   return {
     items: params.items,
-    selectedFilter: '',
     selectedItemIndex: 0,
     isModalOpen: false,
   };
@@ -218,13 +184,6 @@ function makeReducer(flktyRef: MutableRefObject<Flickity>) {
           ...state,
           selectedItemIndex: action.itemIndex,
         });
-      }
-      case 'filter': {
-        // filter the list
-        return {
-          ...state,
-          selectedFilter: action.filter,
-        };
       }
       case 'open_modal': {
         return {
@@ -250,8 +209,8 @@ function makeReducer(flktyRef: MutableRefObject<Flickity>) {
           selectedItemIndex: state.selectedItemIndex - 1,
         });
       }
-      // default:
-      //   throw new Error('Unknown action: ' + action.type);
+      default:
+        throw new Error('Unknown action: ' + JSON.stringify(action));
     }
   };
 
