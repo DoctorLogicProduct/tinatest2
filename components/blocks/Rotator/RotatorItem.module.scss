@@ -1,5 +1,5 @@
 .item {
-  width: 20%;
+  width: 22%;
   cursor: pointer;
 }
 
@@ -9,7 +9,6 @@
 }
 
 .selected {
-  transform: translateX(0) !important;
   .wrapper {
     scale: 1;
   }

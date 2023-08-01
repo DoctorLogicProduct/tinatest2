@@ -1,19 +1,28 @@
-import React, { FC, MutableRefObject, useReducer, useRef } from "react";
+import React, { ComponentType, FC, MutableRefObject, useReducer, useRef } from "react";
 import { createPortal } from "react-dom";
-import Flickity from 'react-flickity-component';
+import { classNames } from 'tinacms';
 
 import { HomeBlocksRotatorItems } from '../../../tina/__generated__/types';
 import { useIfHasRendered } from '../../../hooks/useIfHasRendered';
+import { exhaustiveCheck } from '../../../util';
+
+import { Flickity } from '../../Flickity';
 
 import { RotatorItem } from './RotatorItem';
 import { RotatorModal } from './RotatorModal';
 
 import styles from "./Rotator.module.scss";
+import { RotatorModalFeature } from './RotatorModalFeature';
 
 type RotatorState = {
   items: HomeBlocksRotatorItems[]
   selectedItemIndex: number
   isModalOpen: boolean
+  isReady: boolean
+}
+
+type RotatorActionReady = {
+  type: 'ready'
 }
 
 type RotatorActionSetSelected = {
@@ -37,53 +46,37 @@ type RotatorActionPrev = {
   type: 'prev'
 }
 
-type RotatorAction = RotatorActionSetSelected | RotatorActionOpenModal | RotatorActionCloseModal | RotatorActionNext | RotatorActionPrev
+type RotatorAction = RotatorActionReady | RotatorActionSetSelected | RotatorActionOpenModal | RotatorActionCloseModal | RotatorActionNext | RotatorActionPrev
 
 export type RotatorProps = {
   items: HomeBlocksRotatorItems[]
+  modalFeatureComponent: ComponentType<{ feature: string, onClick: (() => void) }>
   parentField: string
 }
 
 export const Rotator: FC<RotatorProps> = (props) => {
-  const { parentField } = props;
+  const {
+    modalFeatureComponent: ModalFeatureComponent,
+    parentField,
+  } = props;
 
   const flickityRef = useRef<Flickity>();
-  const draggingRef = useRef<boolean>(false);
 
   const [state, dispatch] = useReducer(makeReducer(flickityRef), {}, () => initializer(props));
   const {
     items,
     selectedItemIndex,
     isModalOpen,
+    isReady,
   } = state;
 
   const selectedItem = items?.[selectedItemIndex];
   const hasPrev = selectedItemIndex > 0;
   const hasNext = (items?.length > (selectedItemIndex + 1)) ?? false;
 
-  // consolidate unique features into a single list
-  const features = items
-    .reduce((existingFeatures, item) => {
-      item
-        .features
-        .forEach(feature => {
-          const normalized = feature.trim().toLowerCase();
-
-          if (!existingFeatures.some(f => f.key === normalized)) {
-            existingFeatures.push({
-              key: normalized,
-              label: feature,
-            });
-          }
-        });
-
-      return existingFeatures;
-    }, [] as { key: string, label: string }[])
-    .map(entry => entry.label);
-
   return (
     <div
-      className={styles.rotator}
+      className={classNames(styles.rotator, isReady ? '' : styles.hidden)}
     >
       <Flickity
         flickityRef={flickityRefSetup}
@@ -92,7 +85,9 @@ export const Rotator: FC<RotatorProps> = (props) => {
           pageDots: false,
           prevNextButtons: false,
           wrapAround: true,
-          initialIndex: 3,
+          on: {
+            ready: () => dispatch({ type: 'ready' })
+          },
         }}
       >
         {
@@ -104,7 +99,6 @@ export const Rotator: FC<RotatorProps> = (props) => {
                   key={item.title}
                   data={item}
                   selected={selected}
-                  onClick={() => handleItemOnClick(index)}
                   tinaField={`${parentField}.items.${index}`}
                 />
               );
@@ -118,6 +112,17 @@ export const Rotator: FC<RotatorProps> = (props) => {
           createPortal(
             <RotatorModal
               item={selectedItem}
+              features={selectedItem?.features?.map(feature => (
+                <ModalFeatureComponent
+                  key={feature}
+                  feature={feature}
+                  onClick={() => {
+                    dispatch({
+                      type: 'close_modal',
+                    });
+                  }}
+                />
+              ))}
               isOpen={isModalOpen}
               onCloseClick={() => dispatch({ type: 'close_modal' })}
               hasNext={hasNext}
@@ -129,43 +134,28 @@ export const Rotator: FC<RotatorProps> = (props) => {
           )
         )
       }
-    </div >
+    </div>
   );
 
-  function flickityRefSetup(flkty: Flickity): void {
-    flickityRef.current = flkty;
+  function flickityRefSetup(flickity: Flickity): void {
+    flickityRef.current = flickity;
 
-    // handle flickity select event
-    flkty.on('select', (index: number) => {
+    // handle flickity select and staticClick events
+    flickity.on('select', (index: number) => {
       dispatch({
         type: 'select',
         itemIndex: index,
       });
     });
-
-    // handle flickity drag start/end events
-    flkty.on('dragStart', () => draggingRef.current = true);
-    flkty.on('dragEnd', () => {
-      // queue this action so the item onClick can see that there is a drag
-      setTimeout(() => draggingRef.current = false, 1);
-    });
-  }
-
-  function handleItemOnClick(itemIndex: number): void {
-    // must not be dragging
-    if (!draggingRef.current) {
-      // if the item is not selected, select it
-      if (selectedItemIndex !== itemIndex) {
-        dispatch({
-          type: 'select',
-          itemIndex,
-        });
-      }
-
+    flickity.on('staticClick', (event, pointer, element, index) => {
       dispatch({
-        type: 'open_modal',
+        type: 'select',
+        itemIndex: index,
       });
-    }
+      dispatch({
+        type: 'open_modal'
+      });
+    });
   }
 };
 
@@ -174,50 +164,51 @@ function initializer(params: RotatorProps): RotatorState {
     items: params.items,
     selectedItemIndex: 0,
     isModalOpen: false,
+    isReady: false,
   };
 }
 
-function makeReducer(flktyRef: MutableRefObject<Flickity>) {
+function makeReducer(flickityRef: MutableRefObject<Flickity>) {
   return function reducer(state: RotatorState, action: RotatorAction): RotatorState {
     switch (action.type) {
-      case 'select': {
+      case 'ready':
+        return {
+          ...state,
+          isReady: true,
+        };
+      case 'select':
         return ensureFlickityMatches({
           ...state,
           selectedItemIndex: action.itemIndex,
         });
-      }
-      case 'open_modal': {
+      case 'open_modal':
         return {
           ...state,
           isModalOpen: true,
         };
-      }
-      case 'close_modal': {
+      case 'close_modal':
         return {
           ...state,
           isModalOpen: false,
         };
-      }
-      case 'next': {
+      case 'next':
         return ensureFlickityMatches({
           ...state,
           selectedItemIndex: state.selectedItemIndex + 1,
         });
-      }
-      case 'prev': {
+      case 'prev':
         return ensureFlickityMatches({
           ...state,
           selectedItemIndex: state.selectedItemIndex - 1,
         });
-      }
       default:
-        throw new Error('Unknown action: ' + JSON.stringify(action));
+        exhaustiveCheck(action, `Unknown action: ${JSON.stringify(action)}`);
     }
   };
 
   function ensureFlickityMatches(state: RotatorState): RotatorState {
-    if (flktyRef.current && flktyRef.current.selectedIndex !== state.selectedItemIndex) {
-      flktyRef.current.select(state.selectedItemIndex);
+    if (flickityRef.current && flickityRef.current.selectedIndex !== state.selectedItemIndex) {
+      flickityRef.current.select(state.selectedItemIndex);
     }
 
     return state;

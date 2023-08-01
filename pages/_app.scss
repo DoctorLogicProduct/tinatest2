@@ -8,6 +8,20 @@
     outline: none;
 }
 
+html {
+  // offset scroll based on header height
+  scroll-padding-top: 60px;
+  scroll-behavior: smooth;
+
+  @include tablet-min {
+    scroll-padding-top: 80px;
+  }
+
+  @include desktop-min {
+    scroll-padding-top: 100px;
+  }
+}
+
 body {
     // background: linear-gradient(to bottom, #0e0725 0%,#3e4c5e 50%,#0e0725 100%);
     // background: $color-1;
@@ -53,8 +67,3 @@ header {
         width: 20%;
     }
 }
-
-.flickity-viewport {
-    overflow: hidden !important;
-}
- 

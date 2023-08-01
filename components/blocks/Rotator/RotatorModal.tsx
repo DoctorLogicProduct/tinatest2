@@ -1,12 +1,14 @@
-import { ButtonHTMLAttributes, FC, MouseEventHandler } from 'react';
+import { ButtonHTMLAttributes, FC, MouseEventHandler, ReactNode } from 'react';
 import { classNames } from 'tinacms';
 
 import { HomeBlocksRotatorItems, Maybe } from '../../../tina/__generated__/types';
+import { sanitizeIdent } from '../../../util';
 
 import styles from "./RotatorModal.module.scss";
 
 type RotatorModalParams = {
   item: Maybe<HomeBlocksRotatorItems>
+  features: ReactNode
   isOpen: boolean
   onCloseClick: MouseEventHandler<HTMLButtonElement>
   hasNext: boolean
@@ -17,6 +19,7 @@ type RotatorModalParams = {
 
 export const RotatorModal: FC<RotatorModalParams> = ({
   item = {},
+  features = null,
   isOpen,
   onCloseClick,
   hasNext,
@@ -26,7 +29,11 @@ export const RotatorModal: FC<RotatorModalParams> = ({
 }) => {
   return (
     <div
-      className={classNames(styles.modal, isOpen ? styles.modal_open : styles.modal_close)}
+      className={classNames(
+        styles.modal,
+        isOpen ? styles.modal_open : styles.modal_close,
+        ...(item?.features?.map(makeFeatureClass) ?? [])
+      )}
       aria-hidden={!isOpen}
     >
       <div
@@ -79,9 +86,22 @@ export const RotatorModal: FC<RotatorModalParams> = ({
 
             </a>
           )}
-          <RotatorGroupFeatures
-            features={item.features}
-          />
+          {
+            features &&
+            (
+              <div
+                className={styles.modal_features}
+              >
+                {features}
+                {/* {item.features.map(feature => (
+                  <RotatorModalFeature
+                    key={feature}
+                    feature={feature}
+                  />
+                ))} */}
+              </div>
+            )
+          }
         </div>
         {(
           (item.image || '').length > 0 ?
@@ -100,29 +120,6 @@ export const RotatorModal: FC<RotatorModalParams> = ({
   );
 };
 
-function RotatorGroupFeatures({ features }: { features: string[] }) {
-  return (
-    features &&
-    <div
-      className={styles.modal_features}
-    >
-      {
-        features
-          .map((feature) => {
-            const key = feature;
-            return (
-              <span
-                key={key}
-              >
-                {feature}
-              </span>
-            );
-          })
-      }
-    </div>
-  );
-};
-
 function makeButton({ when, children, ...attrs }: { when: boolean } & ButtonHTMLAttributes<HTMLButtonElement>) {
   return when ?
     (
@@ -134,4 +131,8 @@ function makeButton({ when, children, ...attrs }: { when: boolean } & ButtonHTML
       </button>
     ) :
     null;
+}
+
+function makeFeatureClass(feature: string): string {
+  return `modal--${sanitizeIdent(feature)}`;
 }

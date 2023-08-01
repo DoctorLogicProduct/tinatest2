@@ -5,9 +5,12 @@ import {
   HomeBlocksRotatorItems,
   HomeBlocksRotatorRows,
 } from "../../../tina/__generated__/types";
+import { sanitizeIdent } from '../../../util';
+
 import { BlockComponent } from "../_shared";
 
 import { Rotator } from "./Rotator";
+import { RotatorModalFeature } from './RotatorModalFeature';
 
 import styles from './RotatorBlock.module.scss';
 
@@ -51,7 +54,7 @@ type RowProps = {
 };
 
 function Row(props: RowProps) {
-  const id = `rotator-${props.row.feature}`;
+  const id = rotatorIdFromFeature(props.row.feature);
 
   // filter items by the row feature
   const items = props.items.filter((item) =>
@@ -70,7 +73,22 @@ function Row(props: RowProps) {
       <Rotator
         {...props}
         items={items}
+        modalFeatureComponent={({ feature, onClick }) => {
+          const link = feature === props.row.feature ? '' : `#${rotatorIdFromFeature(feature)}`;
+
+          return (
+            <RotatorModalFeature
+              feature={feature}
+              link={link}
+              onClick={link ? onClick : null}
+            />
+          );
+        }}
       />
     </div>
   );
+}
+
+function rotatorIdFromFeature(feature: string) {
+  return `${sanitizeIdent(feature)}-rotator`;
 }
