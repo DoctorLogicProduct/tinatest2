@@ -4,10 +4,13 @@ import { classNames } from 'tinacms';
 import { HomeBlocksRotatorItems, Maybe } from '../../../tina/__generated__/types';
 import { sanitizeIdent } from '../../../util';
 
+import { featuredFeatures } from './_schema';
+
 import styles from "./RotatorModal.module.scss";
 
 type RotatorModalParams = {
   item: Maybe<HomeBlocksRotatorItems>
+  selectedFeature?: string
   features: ReactNode
   isOpen: boolean
   onCloseClick: MouseEventHandler<HTMLButtonElement>
@@ -19,6 +22,7 @@ type RotatorModalParams = {
 
 export const RotatorModal: FC<RotatorModalParams> = ({
   item = {},
+  selectedFeature = '',
   features = null,
   isOpen,
   onCloseClick,
@@ -61,31 +65,38 @@ export const RotatorModal: FC<RotatorModalParams> = ({
         <div
           className={styles.modal_text}
         >
-          {item.title && (
-            <h2
-              className={styles.headline}
-            >
-              {item.title}
-            </h2>
-          )}
-          {item.text && (
-            <p
-              className={styles.text}
-            >
-              {item.text}
-            </p>
-          )}
-          {item.btn_label && (
-            <a
-              className={styles.btn_label}
-              href={item.btn_link}
-            >
-              <span>
-                {item.btn_label}
-              </span>
+          {
+            featuredFeatures.includes(selectedFeature) ? (
+              <>
+                {item.title && (
+                  <h2
+                    className={styles.headline}
+                  >
+                    {item.title}
+                  </h2>
+                )}
+                {item.text && (
+                  <p
+                    className={styles.text}
+                  >
+                    {item.text}
+                  </p>
+                )}
+                {item.btn_label && (
+                  <a
+                    className={styles.btn_label}
+                    href={item.btn_link}
+                  >
+                    <span>
+                      {item.btn_label}
+                    </span>
 
-            </a>
-          )}
+                  </a>
+                )}
+              </>
+            ) :
+              null
+          }
           {
             features &&
             (
@@ -93,12 +104,6 @@ export const RotatorModal: FC<RotatorModalParams> = ({
                 className={styles.modal_features}
               >
                 {features}
-                {/* {item.features.map(feature => (
-                  <RotatorModalFeature
-                    key={feature}
-                    feature={feature}
-                  />
-                ))} */}
               </div>
             )
           }

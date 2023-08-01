@@ -1,10 +1,14 @@
 import { Template } from 'tinacms';
 
-const availableTags = [
+export const availableFeatures = [
   'Featured',
   'Modern',
   'Traditional',
   'Unique',
+];
+
+export const featuredFeatures = [
+  'Featured',
 ];
 
 function makeDefaultRotatorItem({ title = '', text = '', image = '' } = {}) {
@@ -22,10 +26,7 @@ export const rotatorBlock: Template = {
   ui: {
     previewSrc: "/blocks/features.png",
     defaultItem: {
-      itemProps: (item) => {
-        return { label: `${item?.groupLabel}` }
-      },
-      availableFeatures: availableTags,
+      availableFeatures: availableFeatures,
       items: [
         makeDefaultRotatorItem({
           title: 'New Site',
@@ -49,7 +50,7 @@ export const rotatorBlock: Template = {
           type: "string",
           name: "feature",
           label: "Feature",
-          options: availableTags,
+          options: availableFeatures,
         },
         {
           type: 'string',
@@ -90,7 +91,7 @@ export const rotatorBlock: Template = {
           name: "features",
           label: "Features",
           list: true,
-          options: availableTags,
+          options: availableFeatures,
           ui: {
 
           },

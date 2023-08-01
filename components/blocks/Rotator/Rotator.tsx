@@ -1,18 +1,16 @@
-import React, { ComponentType, FC, MutableRefObject, useReducer, useRef } from "react";
+import React, { ComponentType, FC, MouseEventHandler, MutableRefObject, useReducer, useRef } from "react";
 import { createPortal } from "react-dom";
 import { classNames } from 'tinacms';
 
-import { HomeBlocksRotatorItems } from '../../../tina/__generated__/types';
+import { HomeBlocksRotatorItems, Maybe } from '../../../tina/__generated__/types';
 import { useIfHasRendered } from '../../../hooks/useIfHasRendered';
 import { exhaustiveCheck } from '../../../util';
 
 import { Flickity } from '../../Flickity';
 
 import { RotatorItem } from './RotatorItem';
-import { RotatorModal } from './RotatorModal';
 
 import styles from "./Rotator.module.scss";
-import { RotatorModalFeature } from './RotatorModalFeature';
 
 type RotatorState = {
   items: HomeBlocksRotatorItems[]
@@ -48,15 +46,25 @@ type RotatorActionPrev = {
 
 type RotatorAction = RotatorActionReady | RotatorActionSetSelected | RotatorActionOpenModal | RotatorActionCloseModal | RotatorActionNext | RotatorActionPrev
 
+type ModalParams = {
+  item: Maybe<HomeBlocksRotatorItems>
+  isOpen: boolean
+  onCloseClick: MouseEventHandler
+  hasNext: boolean
+  onNextClick: MouseEventHandler
+  hasPrev: boolean
+  onPrevClick: MouseEventHandler
+}
+
 export type RotatorProps = {
   items: HomeBlocksRotatorItems[]
-  modalFeatureComponent: ComponentType<{ feature: string, onClick: (() => void) }>
+  modalComponent: ComponentType<ModalParams>
   parentField: string
 }
 
 export const Rotator: FC<RotatorProps> = (props) => {
   const {
-    modalFeatureComponent: ModalFeatureComponent,
+    modalComponent: ModalComponent,
     parentField,
   } = props;
 
@@ -71,22 +79,41 @@ export const Rotator: FC<RotatorProps> = (props) => {
   } = state;
 
   const selectedItem = items?.[selectedItemIndex];
-  const hasPrev = selectedItemIndex > 0;
-  const hasNext = (items?.length > (selectedItemIndex + 1)) ?? false;
+  const hasPrev = items?.length > 1;
+  const hasNext = hasPrev;
 
   return (
     <div
       className={classNames(styles.rotator, isReady ? '' : styles.hidden)}
     >
       <Flickity
-        flickityRef={flickityRefSetup}
+        flickityRef={flickity => flickityRef.current = flickity}
         options={{
           cellAlign: 'center',
           pageDots: false,
           prevNextButtons: false,
           wrapAround: true,
           on: {
-            ready: () => dispatch({ type: 'ready' })
+            ready: () => {
+              dispatch({
+                type: 'ready'
+              });
+            },
+            select: (index) => {
+              dispatch({
+                type: 'select',
+                itemIndex: index,
+              });
+            },
+            staticClick: (_event, _pointer, _element, index) => {
+              dispatch({
+                type: 'select',
+                itemIndex: index,
+              });
+              dispatch({
+                type: 'open_modal'
+              });
+            },
           },
         }}
       >
@@ -110,19 +137,8 @@ export const Rotator: FC<RotatorProps> = (props) => {
         // and if we just check for `globalThis?.document` the initial renders won't match
         useIfHasRendered(() =>
           createPortal(
-            <RotatorModal
+            <ModalComponent
               item={selectedItem}
-              features={selectedItem?.features?.map(feature => (
-                <ModalFeatureComponent
-                  key={feature}
-                  feature={feature}
-                  onClick={() => {
-                    dispatch({
-                      type: 'close_modal',
-                    });
-                  }}
-                />
-              ))}
               isOpen={isModalOpen}
               onCloseClick={() => dispatch({ type: 'close_modal' })}
               hasNext={hasNext}
@@ -136,27 +152,6 @@ export const Rotator: FC<RotatorProps> = (props) => {
       }
     </div>
   );
-
-  function flickityRefSetup(flickity: Flickity): void {
-    flickityRef.current = flickity;
-
-    // handle flickity select and staticClick events
-    flickity.on('select', (index: number) => {
-      dispatch({
-        type: 'select',
-        itemIndex: index,
-      });
-    });
-    flickity.on('staticClick', (event, pointer, element, index) => {
-      dispatch({
-        type: 'select',
-        itemIndex: index,
-      });
-      dispatch({
-        type: 'open_modal'
-      });
-    });
-  }
 };
 
 function initializer(params: RotatorProps): RotatorState {
@@ -192,15 +187,19 @@ function makeReducer(flickityRef: MutableRefObject<Flickity>) {
           isModalOpen: false,
         };
       case 'next':
-        return ensureFlickityMatches({
-          ...state,
-          selectedItemIndex: state.selectedItemIndex + 1,
-        });
+        return ensureFlickityMatches(
+          wrapSelectedIndex({
+            ...state,
+            selectedItemIndex: state.selectedItemIndex + 1,
+          })
+        );
       case 'prev':
-        return ensureFlickityMatches({
-          ...state,
-          selectedItemIndex: state.selectedItemIndex - 1,
-        });
+        return ensureFlickityMatches(
+          wrapSelectedIndex({
+            ...state,
+            selectedItemIndex: state.selectedItemIndex - 1,
+          })
+        );
       default:
         exhaustiveCheck(action, `Unknown action: ${JSON.stringify(action)}`);
     }
@@ -212,5 +211,18 @@ function makeReducer(flickityRef: MutableRefObject<Flickity>) {
     }
 
     return state;
+  }
+
+  function wrapSelectedIndex({ selectedItemIndex, ...state }: RotatorState): RotatorState {
+    if (selectedItemIndex < 0) {
+      selectedItemIndex = state.items.length - 1;
+    } else if (selectedItemIndex >= state.items.length) {
+      selectedItemIndex = 0;
+    }
+
+    return {
+      ...state,
+      selectedItemIndex,
+    };
   }
 }

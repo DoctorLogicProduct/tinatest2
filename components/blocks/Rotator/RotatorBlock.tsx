@@ -10,6 +10,7 @@ import { sanitizeIdent } from '../../../util';
 import { BlockComponent } from "../_shared";
 
 import { Rotator } from "./Rotator";
+import { RotatorModal } from './RotatorModal';
 import { RotatorModalFeature } from './RotatorModalFeature';
 
 import styles from './RotatorBlock.module.scss';
@@ -20,8 +21,12 @@ export const RotatorBlock: BlockComponent<HomeBlocksRotator> = ({
 }) => {
   const { items = [], rows = [] } = data;
 
+  const rowFeatures = rows.map(row => row.feature);
+
   return (
-    <div className={styles.rotator_block}>
+    <div
+      className={styles.rotator_block}
+    >
       {rows
         // make sure each row has a feature and each feature only appears once
         .reduce((cleanedRows, row) => {
@@ -40,6 +45,7 @@ export const RotatorBlock: BlockComponent<HomeBlocksRotator> = ({
             key={row.feature}
             items={items}
             row={row}
+            rowFeatures={rowFeatures}
             parentField={parentField}
           />
         ))}
@@ -48,9 +54,10 @@ export const RotatorBlock: BlockComponent<HomeBlocksRotator> = ({
 };
 
 type RowProps = {
-  items: HomeBlocksRotatorItems[];
-  row: HomeBlocksRotatorRows;
-  parentField: string;
+  items: HomeBlocksRotatorItems[]
+  row: HomeBlocksRotatorRows
+  rowFeatures: string[]
+  parentField: string
 };
 
 function Row(props: RowProps) {
@@ -73,17 +80,49 @@ function Row(props: RowProps) {
       <Rotator
         {...props}
         items={items}
-        modalFeatureComponent={({ feature, onClick }) => {
-          const link = feature === props.row.feature ? '' : `#${rotatorIdFromFeature(feature)}`;
+        modalComponent={modalProps => (
+          <RotatorModal
+            {...modalProps}
+            selectedFeature={props.row.feature}
+            features={
+              modalProps
+                .item
+                ?.features
+                // order the features to make sure the selected feature is first
+                ?.reduce((list, item) => {
+                  if (item === props.row.feature) {
+                    list.unshift(item);
+                  } else {
+                    list.push(item);
+                  }
+                  return list;
+                }, [])
+                // convert features to components
+                ?.map(feature => {
+                  const isCurrent = feature === props.row.feature;
 
-          return (
-            <RotatorModalFeature
-              feature={feature}
-              link={link}
-              onClick={link ? onClick : null}
-            />
-          );
-        }}
+                  // only show a link if the feature isn't the current one and there is a rotator for it
+                  const link =
+                    (
+                      isCurrent ||
+                      !props.rowFeatures.includes(feature)
+                    ) ?
+                      '' :
+                      `#${rotatorIdFromFeature(feature)}`;
+
+                  return (
+                    <RotatorModalFeature
+                      key={feature}
+                      isCurrent={isCurrent}
+                      feature={feature}
+                      link={link}
+                      onClick={link ? modalProps.onCloseClick : null}
+                    />
+                  );
+                })
+            }
+          />
+        )}
       />
     </div>
   );
