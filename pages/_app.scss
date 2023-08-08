@@ -12,6 +12,7 @@ html {
   // offset scroll based on header height
   scroll-padding-top: 60px;
   scroll-behavior: smooth;
+  margin: 0;
 
   @include tablet-min {
     scroll-padding-top: 80px;
@@ -66,4 +67,9 @@ header {
         max-width: 220px;
         width: 20%;
     }
+}
+
+.main {
+    max-width: 1240px;
+    margin: 0 auto;
 }

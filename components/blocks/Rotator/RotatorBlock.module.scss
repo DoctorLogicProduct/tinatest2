@@ -1,5 +1,17 @@
+@import "/public/styles/mixins.scss";
+
 .label {
   font-size: 2rem;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 8px;
+    height: 2px;
+    background: $color-4;
+    width: 100%;
+  }
 }
 
 .rotator_block {
