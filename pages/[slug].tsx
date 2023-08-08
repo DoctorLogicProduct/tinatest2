@@ -1,6 +1,6 @@
 import { useTina } from "tinacms/dist/react";
 import { TinaMarkdown } from "tinacms/dist/rich-text";
-
+import { Blocks } from '../components/Blocks';
 import { Layout } from "../components/Layout";
 import { client } from "../tina/__generated__/client";
 
@@ -15,6 +15,7 @@ export default function Home(props) {
   const content = data?.page?.body;
   return (
     <Layout>
+      <Blocks {...(data?.home || [])} />
       <TinaMarkdown content={content} />
     </Layout>
   );
@@ -22,8 +23,8 @@ export default function Home(props) {
 
 
 export const getStaticPaths = async () => {
-  const { data } = await client.queries.pageConnection();
-  const paths = data.pageConnection.edges.map((x) => {
+  const { data } = await client.queries.homeConnection();
+  const paths = data.homeConnection.edges.map((x) => {
     return { params: { slug: x.node._sys.filename } };
   });
 
@@ -34,7 +35,7 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = async (ctx) => {
-  const { data, query, variables } = await client.queries.page({
+  const { data, query, variables } = await client.queries.home({
     relativePath: ctx.params.slug + ".mdx",
   });
 

@@ -73,3 +73,36 @@ header {
     max-width: 1240px;
     margin: 0 auto;
 }
+
+.flickity-viewport {
+    overflow: hidden;
+}
+
+.flickity-prev-next-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid $color-2;
+    background: transparentize($color-4, .5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &.previous {
+        left: -24px;
+    }
+
+    &.next {
+        right: -24px;
+    }
+
+    svg {
+        fill: $color-2;
+        width: 24px;
+        height: 24px;
+    }
+}

@@ -25,6 +25,8 @@ export default function Home(props) {
           {JSON.stringify(data.home, null, 2)}
         </pre>
       </code> */}
+      <h1>DoctorLogic Designs</h1>
+        <p>Welcome to the DoctorLogic Design Gallery.  Take a look at various designs produced by the award winning DoctorLogic design team to get inspiration for your new website.</p>
       <Blocks {...(data?.home || [])} />
       <TinaMarkdown content={content} />
     </Layout>

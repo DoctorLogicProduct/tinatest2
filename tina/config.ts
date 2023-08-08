@@ -28,13 +28,10 @@ export default defineConfig({
   schema: {
     collections: [
       {
-        label: "Home Page",
+        label: "Pages",
         name: "home",
         path: "content",
         format: "mdx",
-        match: {
-          include: "home"
-        },
         fields: [
           {
             type: 'object',
@@ -58,31 +55,9 @@ export default defineConfig({
               return '/';
             }
 
-            return undefined;
+            return document._sys.filename;
           },
         }
-      },
-      {
-        label: "Page Content",
-        name: "page",
-        path: "content/page",
-        format: "mdx",
-        fields: [
-          {
-            type: 'image',
-            label: 'Hero image',
-            name: 'hero',
-          },
-          {
-            name: "body",
-            label: "Main Content",
-            type: "rich-text",
-            isBody: true,
-          },
-        ],
-        ui: {
-          router: ({ document }) => document._sys.filename,
-        },
       },
       {
         label: "Blog Posts",

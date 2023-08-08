@@ -1,11 +1,40 @@
+@import "/public/styles/mixins.scss";
+
 .item {
-  width: 22%;
+  width: 100%;
   cursor: pointer;
+
+  @include phone-wide-min {
+    width: 33%;
+  }
+
+  @include desktop-sm-min {
+    width: 22%
+  }
+  
+  
 }
 
 .wrapper {
   scale: 0.9;
   transition: scale 0.5s;
+
+  h3 {
+    position: relative;
+    text-align: center;
+    margin: 32px 0 0;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 2px;
+      width: 56px;
+      background: transparentize($color-2, .8);
+    }
+  }
 }
 
 .selected {

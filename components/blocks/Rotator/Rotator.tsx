@@ -91,7 +91,7 @@ export const Rotator: FC<RotatorProps> = (props) => {
         options={{
           cellAlign: 'center',
           pageDots: false,
-          prevNextButtons: false,
+          prevNextButtons: true,
           wrapAround: true,
           on: {
             ready: () => {
