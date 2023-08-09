@@ -9,7 +9,19 @@
     outline: none;
 }
 
+.header {
 
+    &__logo {
+        max-width: 220px;
+        width: 20%;
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+    
+}
 
 .menu_trigger {
 

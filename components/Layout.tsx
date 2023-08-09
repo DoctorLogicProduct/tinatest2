@@ -12,7 +12,7 @@ export const Layout = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header>
-        <img src="/img/logo-horiz-white-2018.svg" alt="DoctorLogic" />
+        <a className={styles.header__logo} href='/'><img src="/img/logo-horiz-white-2018.svg" alt="DoctorLogic" /></a>
         <div className={styles.menu_trigger}>
           <a href="#menu_content" className="open-menu">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
@@ -54,7 +54,7 @@ export const Layout = (props) => {
             </div>
             <ul>
               <li>
-                <a href="/">Layout Options</a>
+                <a href="/Layout_Principles">Layout Options</a>
               </li>
             </ul>
           </div>

@@ -62,11 +62,6 @@ header {
     top: 0;
     background: conic-gradient(from 90deg at bottom right, $color-1, $color-4);
     z-index: 10;
-
-    img {
-        max-width: 220px;
-        width: 20%;
-    }
 }
 
 .main {
@@ -91,6 +86,8 @@ header {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    box-shadow: rgba(48, 198, 173, 0) 0px 4px 24px 0px;
+    transition: box-shadow .5s ease;
 
     &.previous {
         left: -24px;
@@ -104,5 +101,9 @@ header {
         fill: $color-2;
         width: 24px;
         height: 24px;
+    }
+
+    &:hover {
+        box-shadow: rgba(48, 198, 173, 0.4) 0px 4px 24px 0px;
     }
 }
