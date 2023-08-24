@@ -2,9 +2,17 @@ import { Template } from 'tinacms';
 
 export const availableFeatures = [
   'Featured',
-  'Modern',
-  'Traditional',
-  'Unique',
+  'Plastic Surgery',
+  'Med Spa',
+  'Dental',
+  'Health & Wellness',
+  'Dermatology',
+  'Vision',
+  'Primary Care',
+  'Psychiatry',
+  'Urgent Care',
+  'Physical Therapy',
+  'Telehealth Only'
 ];
 
 export const featuredFeatures = [
