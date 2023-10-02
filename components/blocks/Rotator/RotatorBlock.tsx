@@ -65,7 +65,7 @@ function Row(props: RowProps) {
 
   // filter items by the row feature
   const items = props.items.filter((item) =>
-    item.features.includes(props.row.feature),
+    item?.features?.includes(props.row.feature)
   );
 
   return (
