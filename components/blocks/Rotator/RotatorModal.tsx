@@ -65,8 +65,8 @@ export const RotatorModal: FC<RotatorModalParams> = ({
         <div
           className={styles.modal_text}
         >
-          {
-            featuredFeatures.includes(selectedFeature) ? (
+          {/* {
+            featuredFeatures.includes(selectedFeature) ? ( */}
               <>
                 {item.title && (
                   <h2
@@ -94,9 +94,9 @@ export const RotatorModal: FC<RotatorModalParams> = ({
                   </a>
                 )}
               </>
-            ) :
+            {/* ) :
               null
-          }
+          } */}
           {
             features &&
             (
