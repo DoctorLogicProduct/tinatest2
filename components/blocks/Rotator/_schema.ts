@@ -12,7 +12,8 @@ export const availableFeatures = [
   'Psychiatry',
   'Urgent Care',
   'Physical Therapy',
-  'Telehealth Only'
+  'Telehealth Only',
+  'Specialty',
 ];
 
 export const featuredFeatures = [
