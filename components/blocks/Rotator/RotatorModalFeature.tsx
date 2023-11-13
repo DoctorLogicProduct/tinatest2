@@ -23,6 +23,7 @@ export function RotatorModalFeature({ isCurrent, feature, link, onClick }: Rotat
         className={className}
         href={link}
         onClick={onClick}
+        target='_blank'
       >
         {feature}
       </a>
