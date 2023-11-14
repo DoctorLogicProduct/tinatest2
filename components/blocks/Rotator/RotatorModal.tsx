@@ -86,6 +86,7 @@ export const RotatorModal: FC<RotatorModalParams> = ({
                   <a
                     className={styles.btn_label}
                     href={item.btn_link}
+                    target='_blank'
                   >
                     <span>
                       {item.btn_label}
